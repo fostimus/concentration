@@ -29,7 +29,17 @@ const toggleImgSrc = card => {
   }
 };
 
-const checkCards = (card1, card2) => {};
+const checkCards = (card1, card2) => {
+  if (card1 !== null && card2 !== null) {
+    const val1 = card1.getAttribute("value");
+    const val2 = card2.getAttribute("value");
+
+    if (val1 === val2) {
+      return true;
+    }
+  }
+  return false;
+};
 
 // figure out how to toggle src values
 const cardClick = e => {
@@ -41,11 +51,12 @@ const cardClick = e => {
     const card = e.target;
     toggleImgSrc(card);
 
+    // check condition here
+    // else {
     //show card for this many seconds
     let showCard = 1;
     const timerInterval = setInterval(() => {
       if (showCard === 0) {
-        //TODO: also include if they click again during the timer
         toggleImgSrc(card);
         clearInterval(timerInterval);
 
@@ -55,11 +66,16 @@ const cardClick = e => {
         } else {
           concentration.selectedCard2 = null;
         }
+        // if card is already part of complete deck
+      } else if (concentration.completeDeck.includes(card)) {
+        console.log("TUUUUUURRRRUUUUUUUEE");
+        clearInterval(timerInterval);
       } else {
         showCard--;
       }
     }, 1000);
   }
+  // }
 };
 
 /*
@@ -73,6 +89,8 @@ let concentration = {
   initialDeck: [],
 
   deck: [],
+
+  completeDeck: [],
 
   loadCards: function() {
     // load card imgs into initial deck
@@ -178,11 +196,34 @@ concentration.log();
 
 for (const card of concentration.deck) {
   card.addEventListener("click", () => {
-    if (concentration.selectedCard1 === null) {
+    const selectedCard1 = concentration.selectedCard1;
+    const selectedCard2 = concentration.selectedCard2;
+
+    if (selectedCard1 === null) {
       concentration.selectedCard1 = card;
     } else {
       concentration.selectedCard2 = card;
     }
+
+    if (checkCards(concentration.selectedCard1, concentration.selectedCard2)) {
+      const val1 = concentration.selectedCard1.getAttribute("value");
+      const val2 = concentration.selectedCard2.getAttribute("value");
+      //permanently keep it face up
+      concentration.selectedCard1.setAttribute(
+        "src",
+        "./images/card" + val1 + ".png"
+      );
+      concentration.selectedCard2.setAttribute(
+        "src",
+        "./images/card" + val2 + ".png"
+      );
+
+      //add card to complete deck
+      concentration.completeDeck.push(concentration.selectedCard1);
+      concentration.completeDeck.push(concentration.selectedCard2);
+    }
+
+    console.log(concentration.completeDeck);
   });
 }
 
