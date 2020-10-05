@@ -18,13 +18,21 @@ const appendToCardContainer = deck => {
   }
 };
 
+const toggleImgSrc = card => {
+  if (card.getAttribute("src").includes("card")) {
+    card.setAttribute("src", "./images/back.png");
+  } else {
+    card.setAttribute(
+      "src",
+      "./images/card" + card.getAttribute("value") + ".png"
+    );
+  }
+};
+
 // figure out how to toggle src values
 const cardClick = e => {
   const card = e.target;
-  card.setAttribute(
-    "src",
-    "./images/card" + card.getAttribute("value") + ".png"
-  );
+  toggleImgSrc(card);
 };
 
 /*
@@ -41,6 +49,8 @@ let concentration = {
     for (let i = 2; i < 15; i++) {
       const cardImg = document.createElement("img");
       cardImg.setAttribute("src", "./images/back.png");
+
+      // TODO: nice to have stretch goal: hash value to hide value
       cardImg.setAttribute("value", i);
       this.initialDeck.push(cardImg);
     }
