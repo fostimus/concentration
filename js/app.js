@@ -13,11 +13,18 @@ const appendToCardContainer = deck => {
 
   // note: instead of removing the img from the container, just update the attribute
   console.log("length of deck: " + deck.length);
-  for (let i = 0; i < deck.length; i++) {
-    console.log(i);
-    console.log(deck[i]);
-    cardContainer.appendChild(deck[i]);
+  for (const card of deck) {
+    cardContainer.appendChild(card);
   }
+};
+
+// figure out how to toggle src values
+const cardClick = e => {
+  const card = e.target;
+  card.setAttribute(
+    "src",
+    "./images/card" + card.getAttribute("value") + ".png"
+  );
 };
 
 /*
@@ -33,7 +40,7 @@ let concentration = {
     // TODO: going to need more cards. MAX pairs at the moment: 13
     for (let i = 2; i < 15; i++) {
       const cardImg = document.createElement("img");
-      cardImg.setAttribute("src", "./images/card" + i + ".png");
+      cardImg.setAttribute("src", "./images/back.png");
       cardImg.setAttribute("value", i);
       this.initialDeck.push(cardImg);
     }
@@ -48,9 +55,13 @@ let concentration = {
     for (let i = 0; i < numberOfPairs; i++) {
       const randomIndex = Math.floor(Math.random() * this.initialDeck.length);
 
-      this.deck.push(this.initialDeck[randomIndex]);
+      const card = this.initialDeck[randomIndex];
+      card.onclick = cardClick;
+      this.deck.push(card);
       // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
-      this.deck.push(this.initialDeck[randomIndex].cloneNode());
+      const cloneCard = card.cloneNode();
+      cloneCard.onclick = cardClick;
+      this.deck.push(cloneCard);
 
       this.initialDeck.splice(randomIndex, 1);
     }
