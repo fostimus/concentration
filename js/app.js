@@ -68,8 +68,10 @@ const cardClick = e => {
         }
         // if card is already part of complete deck
       } else if (concentration.completeDeck.includes(card)) {
-        console.log("TUUUUUURRRRUUUUUUUEE");
         clearInterval(timerInterval);
+        card.onclick = null;
+        concentration.selectedCard1 = null;
+        concentration.selectedCard2 = null;
       } else {
         showCard--;
       }
@@ -187,24 +189,23 @@ const pairs = 3;
 // initialize deck
 concentration.loadCards();
 concentration.generateDeck(pairs);
-concentration.log();
-
-console.log("-----------");
-
 concentration.shuffle();
-concentration.log();
 
 for (const card of concentration.deck) {
   card.addEventListener("click", () => {
-    const selectedCard1 = concentration.selectedCard1;
-    const selectedCard2 = concentration.selectedCard2;
-
-    if (selectedCard1 === null) {
+    if (concentration.selectedCard1 === null) {
       concentration.selectedCard1 = card;
     } else {
       concentration.selectedCard2 = card;
     }
+  });
 
+  card.addEventListener("click", () => {
+    const selectedCard1 = concentration.selectedCard1;
+    const selectedCard2 = concentration.selectedCard2;
+
+    console.log(concentration.selectedCard1);
+    console.log(concentration.selectedCard2);
     if (checkCards(concentration.selectedCard1, concentration.selectedCard2)) {
       const val1 = concentration.selectedCard1.getAttribute("value");
       const val2 = concentration.selectedCard2.getAttribute("value");
