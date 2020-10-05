@@ -2,7 +2,23 @@
  * DOM Manipulation
  */
 
-const cardContainer = document.querySelector(".card-container");
+const appendToCardContainer = deck => {
+  const cardContainer = document.querySelector(".card-container");
+  const cardContainerChildren = cardContainer.children;
+
+  //remove all children
+  for (let i = cardContainerChildren.length - 1; i >= 0; i--) {
+    cardContainerChildren[i].remove();
+  }
+
+  // note: instead of removing the img from the container, just update the attribute
+  console.log("length of deck: " + deck.length);
+  for (let i = 0; i < deck.length; i++) {
+    console.log(i);
+    console.log(deck[i]);
+    cardContainer.appendChild(deck[i]);
+  }
+};
 
 /*
  * Game Object
@@ -32,9 +48,9 @@ let concentration = {
     for (let i = 0; i < numberOfPairs; i++) {
       const randomIndex = Math.floor(Math.random() * this.initialDeck.length);
 
-      // push card twice, to ensure a pair is in deck
       this.deck.push(this.initialDeck[randomIndex]);
-      this.deck.push(this.initialDeck[randomIndex]);
+      // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
+      this.deck.push(this.initialDeck[randomIndex].cloneNode());
 
       this.initialDeck.splice(randomIndex, 1);
     }
@@ -61,6 +77,29 @@ let concentration = {
 
     this.deck = newDeck;
   },
+  deal: function() {
+    if (this.deck.length <= 0) {
+      alert("No more cards in deck!");
+      return;
+    } else {
+      //remove both current cards
+      document.querySelector(".playerCard").remove();
+      document.querySelector(".cpuCard").remove();
+
+      // deal new player card, set class
+      const newPlayerCard = this.deck.shift();
+      newPlayerCard.setAttribute("class", "playerCard");
+
+      // deal new cpu card, set class
+      const newCpuCard = this.deck.shift();
+      newCpuCard.setAttribute("class", "cpuCard");
+
+      // append dealt cards to card container
+      const cardContainer = document.querySelector(".container");
+      cardContainer.appendChild(newPlayerCard);
+      cardContainer.appendChild(newCpuCard);
+    }
+  },
 
   log: function() {
     for (let i = 0; i < this.deck.length; i++) {
@@ -72,11 +111,16 @@ let concentration = {
 /*
  * Game Play
  */
+const pairs = 4;
+
+// initialize deck
 concentration.loadCards();
-concentration.generateDeck(4);
+concentration.generateDeck(pairs);
 concentration.log();
 
 console.log("-----------");
 
 concentration.shuffle();
 concentration.log();
+
+appendToCardContainer(concentration.deck);
