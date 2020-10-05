@@ -30,6 +30,28 @@ let concentration = {
       this.initialDeck.splice(randomIndex, 1);
     }
   },
+  // Shuffle Method
+  shuffle: function() {
+    const positions = [];
+    const newDeck = [];
+    for (let i = 0; i < this.deck.length; i++) {
+      positions.push(i);
+      newDeck.push(-1);
+    }
+
+    // for every card in the deck (for loop), randomize the length of the card position array (get a random index)
+    for (const card of this.deck) {
+      const randomIndex = Math.floor(Math.random() * positions.length);
+
+      // push original card into new deck at randomized index
+      newDeck[positions[randomIndex]] = card;
+
+      // remove random index from position array
+      positions.splice(randomIndex, 1);
+    }
+
+    this.deck = newDeck;
+  },
 
   log: function() {
     for (let i = 0; i < this.deck.length; i++) {
@@ -42,5 +64,10 @@ let concentration = {
  * Game Play
  */
 concentration.loadCards();
-concentration.generateDeck(13);
+concentration.generateDeck(4);
+concentration.log();
+
+console.log("-----------");
+
+concentration.shuffle();
 concentration.log();
