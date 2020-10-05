@@ -1,3 +1,12 @@
+/*
+ * DOM Manipulation
+ */
+
+const cardContainer = document.querySelector(".card-container");
+
+/*
+ * Game Object
+ */
 let concentration = {
   initialDeck: [],
 
