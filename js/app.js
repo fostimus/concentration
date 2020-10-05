@@ -1,30 +1,33 @@
 let concentration = {
+  initialDeck: [],
+
   deck: [],
 
-  generateDeck: function(numberOfCards) {
-    if (numberOfCards % 2 !== 0) {
-      return "Error! Number of cards must be even";
-    }
-
+  loadCards: function() {
     // load card imgs into initial deck
-    const initialDeck = [];
     // TODO: going to need more cards. MAX pairs at the moment: 13
     for (let i = 2; i < 15; i++) {
       const cardImg = document.createElement("img");
       cardImg.setAttribute("src", "./images/card" + i + ".png");
       cardImg.setAttribute("value", i);
-      initialDeck.push(cardImg);
+      this.initialDeck.push(cardImg);
+    }
+  },
+
+  generateDeck: function(numberOfPairs) {
+    if (this.initialDeck.length < numberOfPairs) {
+      return "Error! Not enough cards loaded. Add more to initialDeck";
     }
 
     // randomly select cards from initialDeck
-    for (let i = 0; i < numberOfCards / 2; i++) {
-      const randomIndex = Math.floor(Math.random() * initialDeck.length);
+    for (let i = 0; i < numberOfPairs; i++) {
+      const randomIndex = Math.floor(Math.random() * this.initialDeck.length);
 
       // push card twice, to ensure a pair is in deck
-      this.deck.push(initialDeck[randomIndex]);
-      this.deck.push(initialDeck[randomIndex]);
+      this.deck.push(this.initialDeck[randomIndex]);
+      this.deck.push(this.initialDeck[randomIndex]);
 
-      initialDeck.splice(randomIndex, 1);
+      this.initialDeck.splice(randomIndex, 1);
     }
   },
 
@@ -35,5 +38,9 @@ let concentration = {
   }
 };
 
-concentration.generateDeck(24);
+/*
+ * Game Play
+ */
+concentration.loadCards();
+concentration.generateDeck(13);
 concentration.log();
