@@ -29,16 +29,47 @@ const toggleImgSrc = card => {
   }
 };
 
+const checkCards = (card1, card2) => {};
+
 // figure out how to toggle src values
 const cardClick = e => {
-  const card = e.target;
-  toggleImgSrc(card);
+  // only perform clicking action if either selected card slot is null
+  if (
+    concentration.selectedCard1 === null ||
+    concentration.selectedCard2 === null
+  ) {
+    const card = e.target;
+    toggleImgSrc(card);
+
+    //show card for this many seconds
+    let showCard = 1;
+    const timerInterval = setInterval(() => {
+      if (showCard === 0) {
+        //TODO: also include if they click again during the timer
+        toggleImgSrc(card);
+        clearInterval(timerInterval);
+
+        //clear the card from concentration object when timer expires
+        if (card === concentration.selectedCard1) {
+          concentration.selectedCard1 = null;
+        } else {
+          concentration.selectedCard2 = null;
+        }
+      } else {
+        showCard--;
+      }
+    }, 1000);
+  }
 };
 
 /*
  * Game Object
  */
 let concentration = {
+  selectedCard1: null,
+
+  selectedCard2: null,
+
   initialDeck: [],
 
   deck: [],
@@ -68,6 +99,7 @@ let concentration = {
       const card = this.initialDeck[randomIndex];
       card.onclick = cardClick;
       this.deck.push(card);
+
       // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
       const cloneCard = card.cloneNode();
       cloneCard.onclick = cardClick;
@@ -132,7 +164,7 @@ let concentration = {
 /*
  * Game Play
  */
-const pairs = 4;
+const pairs = 3;
 
 // initialize deck
 concentration.loadCards();
@@ -144,4 +176,17 @@ console.log("-----------");
 concentration.shuffle();
 concentration.log();
 
+for (const card of concentration.deck) {
+  card.addEventListener("click", () => {
+    if (concentration.selectedCard1 === null) {
+      concentration.selectedCard1 = card;
+    } else {
+      concentration.selectedCard2 = card;
+    }
+  });
+}
+
 appendToCardContainer(concentration.deck);
+
+//after pushing start
+// appendToCardContainer(concentration.deck);
