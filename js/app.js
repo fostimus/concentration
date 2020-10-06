@@ -56,13 +56,21 @@ const clearIntervalAndCards = (interval, card) => {
   concentration.clearSelected();
 };
 
+const convertSeconds = seconds => {
+  if (seconds < 1) {
+    return seconds * 1000;
+  }
+  return seconds;
+};
+
 /*
  * Game Object
  */
 let concentration = {
-  selectedCard1: null,
+  // turnSpeed is in seconds, takes decimals as well.
+  turnSpeed: 1,
 
-  selectedCard2: null,
+  selectedCards: [],
 
   initialDeck: [],
 
@@ -154,8 +162,19 @@ let concentration = {
   },
 
   clearSelected: function() {
-    this.selectedCard1 = null;
-    this.selectedCard2 = null;
+    this.selectedCards = [];
+
+    console.log(this.selectedCards);
+  },
+
+  resetChosen: function() {
+    for (const card of this.selectedCards) {
+      if (!card.getAttribute("src").includes("back")) {
+        toggleImgSrc(card);
+      }
+    }
+
+    this.clearSelected();
   },
 
   log: function() {
@@ -177,54 +196,55 @@ concentration.shuffle();
 
 for (const card of concentration.deck) {
   card.addEventListener("click", () => {
-    if (concentration.selectedCard1 === null) {
-      concentration.selectedCard1 = card;
-    } else if (concentration.selectedCard2 === null) {
-      concentration.selectedCard2 = card;
-    }
+    // console.log(concentration.selectedCard1);
+    console.log(concentration.selectedCards);
 
-    console.log(concentration.selectedCard1);
-    // console.log(concentration.selectedCard2);
-
-    if (card.getAttribute("src").includes("back")) {
+    if (concentration.selectedCards.length < 2) {
       toggleImgSrc(card);
+      // only allow the second card chosen that is flipped up to use the timer
+      if (
+        !card.getAttribute("src").includes("back") &&
+        concentration.selectedCards.length === 1
+      ) {
+        const timerInterval = setInterval(() => {
+          if (concentration.turnSpeed === 0) {
+            // remove click handler from card if already completed
+            if (concentration.completeDeck.includes(card)) {
+              clearIntervalAndCards(timerInterval, card);
+            } else {
+              clearInterval(timerInterval);
 
-      //show card for this many seconds
-      let showCard = 1;
-      const timerInterval = setInterval(() => {
-        if (showCard === 0) {
-          if (concentration.completeDeck.includes(card)) {
+              //clear the cards from concentration object when timer expires
+              concentration.resetChosen();
+            }
+            // remove click handler from card if already completed
+          } else if (concentration.completeDeck.includes(card)) {
             clearIntervalAndCards(timerInterval, card);
           } else {
-            if (!card.getAttribute("src").includes("back")) {
-              toggleImgSrc(card);
-            }
-            clearInterval(timerInterval);
-
-            //clear the card from concentration object when timer expires
-            //NOTE: choosing a card immediately after the first two cards won't match. need to prevent clickability of new cards after 2 in a row are chosen, OR enable continuous 2 card clicking
-            console.log(card);
-            console.log(concentration.selectedCard1);
-            concentration.clearSelected();
+            concentration.turnSpeed--;
           }
-          // if card is already part of complete deck
-        } else if (concentration.completeDeck.includes(card)) {
-          clearIntervalAndCards(timerInterval, card);
-        } else {
-          showCard--;
-        }
-      }, 1000);
-    } else {
-      toggleImgSrc(card);
+        }, 1000);
+      }
+
+      // if the card is flipped up, add the card to selected cards
+      if (!card.getAttribute("src").includes("back")) {
+        concentration.selectedCards.push(card);
+      } // if the card selected is already in selected cards, clear all (turn over)
+      else if (concentration.selectedCards.includes(card)) {
+        concentration.resetChosen();
+      }
     }
   });
 
   //event listener for setting up win condition
   card.addEventListener("click", () => {
-    const selectedCard1 = concentration.selectedCard1;
-    const selectedCard2 = concentration.selectedCard2;
+    if (
+      concentration.selectedCards.length === 2 &&
+      checkCards(concentration.selectedCards[0], concentration.selectedCards[1])
+    ) {
+      const selectedCard1 = concentration.selectedCards[0];
+      const selectedCard2 = concentration.selectedCards[1];
 
-    if (checkCards(selectedCard1, selectedCard2)) {
       const val1 = selectedCard1.getAttribute("value");
       const val2 = selectedCard2.getAttribute("value");
       //permanently keep it face up
@@ -241,6 +261,8 @@ for (const card of concentration.deck) {
 
       concentration.clearSelected();
     }
+
+    console.log(concentration.completeDeck);
   });
 }
 
