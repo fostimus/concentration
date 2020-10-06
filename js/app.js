@@ -6,8 +6,11 @@ const appendToCardContainer = deck => {
   const cardContainer = document.querySelector(".card-container");
   const cardContainerChildren = cardContainer.children;
 
+  // console.log(cardContainer);
   //remove all children
   for (let i = cardContainerChildren.length - 1; i >= 0; i--) {
+    console.log(cardContainerChildren[i]);
+
     cardContainerChildren[i].remove();
   }
 
@@ -155,6 +158,36 @@ const copyCard = (card, concentration) => {
   return cardHolder;
 };
 
+document.querySelector(".start-btn").addEventListener("click", () => {
+  concentration.gameStarted = true;
+  concentration.deal();
+
+  const timer = setInterval(() => {
+    console.log(
+      "Round " +
+        concentration.currentRound +
+        " timeLeft: " +
+        concentration.rounds[concentration.currentRound - 1].timeLeft
+    );
+    const timerDiv = document.querySelector(".timer");
+    timerDiv.textContent =
+      concentration.rounds[concentration.currentRound - 1].timeLeft + "s";
+
+    if (
+      concentration.rounds[concentration.currentRound - 1].timeLeft === 0 ||
+      concentration.rounds[concentration.currentRound - 1].completed
+    ) {
+      clearInterval(timer);
+    } else {
+      concentration.rounds[concentration.currentRound - 1].timeLeft--;
+    }
+
+    if (concentration.rounds[concentration.currentRound - 1].completed) {
+      concentration.currentRound++;
+    }
+  }, 1000);
+});
+
 /*
  * Game Object
  */
@@ -187,6 +220,7 @@ let concentration = {
   },
 
   generateDeck: function(numberOfPairs) {
+    this.deck = [];
     if (this.initialDeck.length < numberOfPairs) {
       return "Error! Not enough cards loaded. Add more to initialDeck";
     }
@@ -287,29 +321,3 @@ let concentration = {
 
 // load cards into JS
 concentration.loadCards();
-
-/*
- * Game Play
- */
-
-let testRound = false;
-
-document.querySelector(".start-btn").addEventListener("click", () => {
-  concentration.gameStarted = true;
-  concentration.deal();
-
-  const timer = setInterval(() => {
-    const timerDiv = document.querySelector(".timer");
-    timerDiv.textContent = concentration.rounds[0].timeLeft + "s";
-
-    if (concentration.rounds[0].timeLeft === 0) {
-      clearInterval(timer);
-    } else {
-      concentration.rounds[0].timeLeft--;
-    }
-
-    if (concentration.rounds[concentration.currentRound - 1].completed) {
-      concentration.currentRound++;
-    }
-  }, 1000);
-});
