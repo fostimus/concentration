@@ -206,24 +206,31 @@ for (const card of concentration.deck) {
         !card.getAttribute("src").includes("back") &&
         concentration.selectedCards.length === 1
       ) {
-        const timerInterval = setInterval(() => {
-          if (concentration.turnSpeed === 0) {
-            // remove click handler from card if already completed
-            if (concentration.completeDeck.includes(card)) {
+        let showCards =
+          concentration.turnSpeed >= 1 ? concentration.turnSpeed : 1;
+        const timerInterval = setInterval(
+          () => {
+            if (showCards === 0) {
+              // remove click handler from card if already completed
+              if (concentration.completeDeck.includes(card)) {
+                clearIntervalAndCards(timerInterval, card);
+              } else {
+                clearInterval(timerInterval);
+
+                //clear the cards from concentration object when timer expires
+                concentration.resetChosen();
+              }
+              // remove click handler from card if already completed
+            } else if (concentration.completeDeck.includes(card)) {
               clearIntervalAndCards(timerInterval, card);
             } else {
-              clearInterval(timerInterval);
-
-              //clear the cards from concentration object when timer expires
-              concentration.resetChosen();
+              showCards--;
             }
-            // remove click handler from card if already completed
-          } else if (concentration.completeDeck.includes(card)) {
-            clearIntervalAndCards(timerInterval, card);
-          } else {
-            concentration.turnSpeed--;
-          }
-        }, 1000);
+          },
+          concentration.turnSpeed >= 1
+            ? 1000
+            : convertSeconds(concentration.turnSpeed)
+        );
       }
 
       // if the card is flipped up, add the card to selected cards
