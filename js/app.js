@@ -57,6 +57,105 @@ const convertSeconds = seconds => {
   return seconds;
 };
 
+const attachCardClickListeners = (card, concentration) => {
+  card.addEventListener("click", () => {
+    if (
+      concentration.gameStarted &&
+      concentration.selectedCards.length < 2 &&
+      !concentration.completeDeck.includes(card)
+    ) {
+      toggleImgSrc(card);
+      // only allow the second card chosen that is flipped up to use the timer
+      if (
+        !card.getAttribute("src").includes("back") &&
+        concentration.selectedCards.length === 1
+      ) {
+        let showCards =
+          concentration.turnSpeed >= 1 ? concentration.turnSpeed : 1;
+        const timerInterval = setInterval(
+          () => {
+            if (showCards === 0) {
+              console.log(timerInterval);
+              clearInterval(timerInterval);
+              concentration.resetChosen();
+            } else {
+              showCards--;
+            }
+          },
+          concentration.turnSpeed >= 1
+            ? 1000
+            : convertSeconds(concentration.turnSpeed)
+        );
+      }
+
+      // if the card is flipped up, add the card to selected cards
+      if (!card.getAttribute("src").includes("back")) {
+        concentration.selectedCards.push(card);
+      } // if the card selected is already in selected cards, clear all (turn over)
+      else if (concentration.selectedCards.includes(card)) {
+        concentration.resetChosen();
+      }
+    }
+  });
+
+  card.addEventListener("click", () => {
+    if (
+      concentration.selectedCards.length === 2 &&
+      checkCards(concentration.selectedCards[0], concentration.selectedCards[1])
+    ) {
+      const selectedCard1 = concentration.selectedCards[0];
+      const selectedCard2 = concentration.selectedCards[1];
+
+      const val1 = selectedCard1.getAttribute("value");
+      const val2 = selectedCard2.getAttribute("value");
+      //permanently keep it face up
+      selectedCard1.setAttribute("src", "./images/card" + val1 + ".png");
+      selectedCard2.setAttribute("src", "./images/card" + val2 + ".png");
+
+      console.log(selectedCard2);
+      //add card to complete deck
+      if (!concentration.completeDeck.includes(selectedCard1)) {
+        concentration.completeDeck.push(selectedCard1);
+      }
+      if (!concentration.completeDeck.includes(selectedCard2)) {
+        concentration.completeDeck.push(selectedCard2);
+      }
+
+      concentration.clearSelected();
+
+      if (concentration.completeDeck.length === concentration.deck.length) {
+        console.log("heheeeellloo");
+        const newDiv = document.createElement("div");
+
+        newDiv.innerHTML = "You win!";
+
+        document.querySelector(".game-play").appendChild(newDiv);
+
+        // round is over, update round object boolean
+        // round[round.number - 1].completed = true;
+      }
+    }
+
+    console.log(concentration.completeDeck);
+  });
+  return card;
+};
+
+const copyCard = (card, concentration) => {
+  const cardHolder = [];
+  //set unique ID per card in pair
+  card.setAttribute("unique-id", 1);
+  cardHolder.push(attachCardClickListeners(card, concentration));
+
+  // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
+  const cloneCard = card.cloneNode();
+  //set unique ID per card in pair
+  cloneCard.setAttribute("unique-id", 2);
+  cardHolder.push(attachCardClickListeners(cloneCard, concentration));
+
+  return cardHolder;
+};
+
 /*
  * Game Object
  */
@@ -78,12 +177,13 @@ let concentration = {
     // load card imgs into initial deck
     // TODO: going to need more cards. MAX pairs at the moment: 13
     for (let i = 2; i < 15; i++) {
-      const cardImg = document.createElement("img");
-      cardImg.setAttribute("src", "./images/back.png");
+      const card = document.createElement("img");
+      card.setAttribute("src", "./images/back.png");
 
       // TODO: nice to have stretch goal: hash value to hide value
-      cardImg.setAttribute("value", i);
-      this.initialDeck.push(cardImg);
+      card.setAttribute("value", i);
+
+      this.initialDeck.push(card);
     }
   },
 
@@ -96,17 +196,11 @@ let concentration = {
     for (let i = 0; i < numberOfPairs; i++) {
       const randomIndex = Math.floor(Math.random() * this.initialDeck.length);
 
-      //push both cards in the pair to the deck
-      const card = this.initialDeck[randomIndex];
-      //set unique ID per card in pair
-      card.setAttribute("unique-id", 1);
-      this.deck.push(card);
+      const cards = copyCard(this.initialDeck[randomIndex], this);
+      console.log(cards);
 
-      // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
-      const cloneCard = card.cloneNode();
-      //set unique ID per card in pair
-      cloneCard.setAttribute("unique-id", 2);
-      this.deck.push(cloneCard);
+      this.deck = this.deck.concat(cards);
+      console.log(this.deck);
 
       this.initialDeck.splice(randomIndex, 1);
     }
@@ -243,88 +337,11 @@ concentration.shuffle();
 appendToCardContainer(concentration.deck);
 
 // append event listeners to each card
+//event listener for setting up win condition
 for (const card of concentration.deck) {
-  card.addEventListener("click", () => {
-    if (
-      concentration.gameStarted &&
-      concentration.selectedCards.length < 2 &&
-      !concentration.completeDeck.includes(card)
-    ) {
-      toggleImgSrc(card);
-      // only allow the second card chosen that is flipped up to use the timer
-      if (
-        !card.getAttribute("src").includes("back") &&
-        concentration.selectedCards.length === 1
-      ) {
-        let showCards =
-          concentration.turnSpeed >= 1 ? concentration.turnSpeed : 1;
-        const timerInterval = setInterval(
-          () => {
-            if (showCards === 0) {
-              console.log(timerInterval);
-              clearInterval(timerInterval);
-              concentration.resetChosen();
-            } else {
-              showCards--;
-            }
-          },
-          concentration.turnSpeed >= 1
-            ? 1000
-            : convertSeconds(concentration.turnSpeed)
-        );
-      }
+  card;
 
-      // if the card is flipped up, add the card to selected cards
-      if (!card.getAttribute("src").includes("back")) {
-        concentration.selectedCards.push(card);
-      } // if the card selected is already in selected cards, clear all (turn over)
-      else if (concentration.selectedCards.includes(card)) {
-        concentration.resetChosen();
-      }
-    }
-  });
-
-  //event listener for setting up win condition
-  card.addEventListener("click", () => {
-    if (
-      concentration.selectedCards.length === 2 &&
-      checkCards(concentration.selectedCards[0], concentration.selectedCards[1])
-    ) {
-      const selectedCard1 = concentration.selectedCards[0];
-      const selectedCard2 = concentration.selectedCards[1];
-
-      const val1 = selectedCard1.getAttribute("value");
-      const val2 = selectedCard2.getAttribute("value");
-      //permanently keep it face up
-      selectedCard1.setAttribute("src", "./images/card" + val1 + ".png");
-      selectedCard2.setAttribute("src", "./images/card" + val2 + ".png");
-
-      console.log(selectedCard2);
-      //add card to complete deck
-      if (!concentration.completeDeck.includes(selectedCard1)) {
-        concentration.completeDeck.push(selectedCard1);
-      }
-      if (!concentration.completeDeck.includes(selectedCard2)) {
-        concentration.completeDeck.push(selectedCard2);
-      }
-
-      concentration.clearSelected();
-
-      if (concentration.completeDeck.length === concentration.deck.length) {
-        console.log("heheeeellloo");
-        const newDiv = document.createElement("div");
-
-        newDiv.innerHTML = "You win!";
-
-        document.querySelector(".game-play").appendChild(newDiv);
-
-        // round is over, update round object boolean
-        // round[round.number - 1].completed = true;
-      }
-    }
-
-    console.log(concentration.completeDeck);
-  });
+  card;
 }
 
 //after pushing start
