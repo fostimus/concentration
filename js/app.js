@@ -12,9 +12,6 @@ const appendToCardContainer = deck => {
   }
 
   for (const card of deck) {
-    // if (card.getAttribute("src").includes("card")) {
-    //   toggleImgSrc(card);
-    // }
     cardContainer.appendChild(card);
   }
 };
@@ -161,7 +158,6 @@ nextRoundBtn.disabled = true;
 nextRoundBtn.addEventListener("click", () => {
   pauseTimer = false;
   concentration.deal();
-  nextRoundBtn.setAttribute("value", concentration.currentRound);
   nextRoundBtn.disabled = true;
 });
 
@@ -170,16 +166,18 @@ const startBtn = document.querySelector(".start-btn");
 startBtn.addEventListener("click", () => {
   concentration.gameStarted = true;
   startBtn.disabled = true;
-  nextRoundBtn.setAttribute("value", concentration.currentRound);
   concentration.deal();
 
   const timer = setInterval(() => {
     if (!pauseTimer) {
       const timerDiv = document.querySelector(".timer");
 
+      // if a round expires, clear the timer, set the round to 1, and enable the start button
       if (concentration.rounds[concentration.currentRound - 1].timeLeft === 0) {
         timerDiv.textContent = "------";
         clearInterval(timer);
+        concentration.currentRound = 1;
+        startBtn.disabled = false;
       }
       // if the round is completed, pause the timer, clear the completed deck, and enable the next round button
       else if (concentration.rounds[concentration.currentRound - 1].completed) {
@@ -285,6 +283,7 @@ let concentration = {
     // initialize deck
     this.generateDeck(this.rounds[this.currentRound - 1].pairs);
     this.shuffle();
+    nextRoundBtn.setAttribute("value", this.currentRound);
     appendToCardContainer(this.deck);
   },
   clearSelected: function() {
