@@ -34,50 +34,67 @@ const checkCards = (card1, card2) => {
     const val1 = card1.getAttribute("value");
     const val2 = card2.getAttribute("value");
 
-    if (val1 === val2) {
+    const uniqueIds = [];
+    uniqueIds.push(card1.getAttribute("unique-id"));
+    uniqueIds.push(card2.getAttribute("unique-id"));
+
+    if (
+      val1 === val2 &&
+      uniqueIds.length === 2 &&
+      uniqueIds.includes("1") &&
+      uniqueIds.includes("2")
+    ) {
       return true;
     }
   }
   return false;
 };
 
+const clearIntervalAndCards = (interval, card) => {
+  clearInterval(interval);
+  card.onclick = null;
+  concentration.clearSelected();
+};
+
 // figure out how to toggle src values
 const cardClick = e => {
   // only perform clicking action if either selected card slot is null
+
   if (
     concentration.selectedCard1 === null ||
     concentration.selectedCard2 === null
   ) {
     const card = e.target;
-    toggleImgSrc(card);
 
-    // check condition here
-    // else {
-    //show card for this many seconds
-    let showCard = 1;
-    const timerInterval = setInterval(() => {
-      if (showCard === 0) {
-        toggleImgSrc(card);
-        clearInterval(timerInterval);
+    if (card.getAttribute("src").includes("back")) {
+      toggleImgSrc(card);
 
-        //clear the card from concentration object when timer expires
-        if (card === concentration.selectedCard1) {
-          concentration.selectedCard1 = null;
+      //show card for this many seconds
+      let showCard = 1;
+      const timerInterval = setInterval(() => {
+        if (showCard === 0) {
+          if (concentration.completeDeck.includes(card)) {
+            clearIntervalAndCards(timerInterval, card);
+          } else {
+            if (!card.getAttribute("src").includes("back")) {
+              toggleImgSrc(card);
+            }
+            clearInterval(timerInterval);
+
+            //clear the card from concentration object when timer expires
+            concentration.clearSelected();
+          }
+          // if card is already part of complete deck
+        } else if (concentration.completeDeck.includes(card)) {
+          clearIntervalAndCards(timerInterval, card);
         } else {
-          concentration.selectedCard2 = null;
+          showCard--;
         }
-        // if card is already part of complete deck
-      } else if (concentration.completeDeck.includes(card)) {
-        clearInterval(timerInterval);
-        card.onclick = null;
-        concentration.selectedCard1 = null;
-        concentration.selectedCard2 = null;
-      } else {
-        showCard--;
-      }
-    }, 1000);
+      }, 1000);
+    } else {
+      toggleImgSrc(card);
+    }
   }
-  // }
 };
 
 /*
@@ -116,13 +133,18 @@ let concentration = {
     for (let i = 0; i < numberOfPairs; i++) {
       const randomIndex = Math.floor(Math.random() * this.initialDeck.length);
 
+      //push both cards in the pair to the deck
       const card = this.initialDeck[randomIndex];
       card.onclick = cardClick;
+      //set unique ID per card in pair
+      card.setAttribute("unique-id", 1);
       this.deck.push(card);
 
       // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
       const cloneCard = card.cloneNode();
       cloneCard.onclick = cardClick;
+      //set unique ID per card in pair
+      cloneCard.setAttribute("unique-id", 2);
       this.deck.push(cloneCard);
 
       this.initialDeck.splice(randomIndex, 1);
@@ -174,6 +196,11 @@ let concentration = {
     }
   },
 
+  clearSelected: function() {
+    this.selectedCard1 = null;
+    this.selectedCard2 = null;
+  },
+
   log: function() {
     for (let i = 0; i < this.deck.length; i++) {
       console.log(this.deck[i].getAttribute("value"));
@@ -193,9 +220,15 @@ concentration.shuffle();
 
 for (const card of concentration.deck) {
   card.addEventListener("click", () => {
+    if (concentration.completeDeck.includes(card)) {
+      concentration.clearSelected();
+    }
+  });
+
+  card.addEventListener("click", () => {
     if (concentration.selectedCard1 === null) {
       concentration.selectedCard1 = card;
-    } else {
+    } else if (concentration.selectedCard2 === null) {
       concentration.selectedCard2 = card;
     }
   });
@@ -204,24 +237,22 @@ for (const card of concentration.deck) {
     const selectedCard1 = concentration.selectedCard1;
     const selectedCard2 = concentration.selectedCard2;
 
-    console.log(concentration.selectedCard1);
-    console.log(concentration.selectedCard2);
-    if (checkCards(concentration.selectedCard1, concentration.selectedCard2)) {
-      const val1 = concentration.selectedCard1.getAttribute("value");
-      const val2 = concentration.selectedCard2.getAttribute("value");
+    console.log(selectedCard1);
+    console.log(selectedCard2);
+    if (checkCards(selectedCard1, selectedCard2)) {
+      const val1 = selectedCard1.getAttribute("value");
+      const val2 = selectedCard2.getAttribute("value");
       //permanently keep it face up
-      concentration.selectedCard1.setAttribute(
-        "src",
-        "./images/card" + val1 + ".png"
-      );
-      concentration.selectedCard2.setAttribute(
-        "src",
-        "./images/card" + val2 + ".png"
-      );
+      selectedCard1.setAttribute("src", "./images/card" + val1 + ".png");
+      selectedCard2.setAttribute("src", "./images/card" + val2 + ".png");
 
       //add card to complete deck
-      concentration.completeDeck.push(concentration.selectedCard1);
-      concentration.completeDeck.push(concentration.selectedCard2);
+      if (!concentration.completeDeck.includes(selectedCard1)) {
+        concentration.completeDeck.push(selectedCard1);
+      }
+      if (!concentration.completeDeck.includes(selectedCard2)) {
+        concentration.completeDeck.push(selectedCard2);
+      }
     }
 
     console.log(concentration.completeDeck);
