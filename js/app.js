@@ -50,12 +50,6 @@ const checkCards = (card1, card2) => {
   return false;
 };
 
-const clearIntervalAndCards = (interval, card) => {
-  clearInterval(interval);
-  card.onclick = null;
-  concentration.clearSelected();
-};
-
 const convertSeconds = seconds => {
   if (seconds < 1) {
     return seconds * 1000;
@@ -68,7 +62,7 @@ const convertSeconds = seconds => {
  */
 let concentration = {
   // turnSpeed is in seconds, takes decimals as well.
-  turnSpeed: 0.5,
+  turnSpeed: 0.25,
 
   selectedCards: [],
 
@@ -165,8 +159,6 @@ let concentration = {
 
   clearSelected: function() {
     this.selectedCards = [];
-
-    console.log(this.selectedCards);
   },
 
   resetChosen: function() {
@@ -210,18 +202,9 @@ for (const card of concentration.deck) {
         const timerInterval = setInterval(
           () => {
             if (showCards === 0) {
+              clearInterval(timerInterval);
+              concentration.resetChosen();
               // remove click handler from card if already completed
-              if (concentration.completeDeck.includes(card)) {
-                clearIntervalAndCards(timerInterval, card);
-              } else {
-                clearInterval(timerInterval);
-
-                //clear the cards from concentration object when timer expires
-                concentration.resetChosen();
-              }
-              // remove click handler from card if already completed
-            } else if (concentration.completeDeck.includes(card)) {
-              clearIntervalAndCards(timerInterval, card);
             } else {
               showCards--;
             }
@@ -257,6 +240,7 @@ for (const card of concentration.deck) {
       selectedCard1.setAttribute("src", "./images/card" + val1 + ".png");
       selectedCard2.setAttribute("src", "./images/card" + val2 + ".png");
 
+      console.log(selectedCard2);
       //add card to complete deck
       if (!concentration.completeDeck.includes(selectedCard1)) {
         concentration.completeDeck.push(selectedCard1);
@@ -266,6 +250,15 @@ for (const card of concentration.deck) {
       }
 
       concentration.clearSelected();
+
+      if (concentration.completeDeck.length === concentration.deck.length) {
+        console.log("heheeeellloo");
+        const newDiv = document.createElement("div");
+
+        newDiv.innerHTML = "You win!";
+
+        document.querySelector(".game-play").appendChild(newDiv);
+      }
     }
 
     console.log(concentration.completeDeck);
