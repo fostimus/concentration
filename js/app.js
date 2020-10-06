@@ -78,6 +78,8 @@ let concentration = {
 
   completeDeck: [],
 
+  gameStarted: false,
+
   loadCards: function() {
     // load card imgs into initial deck
     // TODO: going to need more cards. MAX pairs at the moment: 13
@@ -196,10 +198,7 @@ concentration.shuffle();
 
 for (const card of concentration.deck) {
   card.addEventListener("click", () => {
-    // console.log(concentration.selectedCard1);
-    console.log(concentration.selectedCards);
-
-    if (concentration.selectedCards.length < 2) {
+    if (concentration.gameStarted && concentration.selectedCards.length < 2) {
       toggleImgSrc(card);
       // only allow the second card chosen that is flipped up to use the timer
       if (
@@ -272,6 +271,10 @@ for (const card of concentration.deck) {
     console.log(concentration.completeDeck);
   });
 }
+
+document.querySelector(".start-btn").addEventListener("click", () => {
+  concentration.gameStarted = true;
+});
 
 appendToCardContainer(concentration.deck);
 

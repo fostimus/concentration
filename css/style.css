@@ -4,11 +4,29 @@ body {
   margin-top: 50px;
 }
 
+.game-play,
+.logistics {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.game-play {
+  gap: 40px;
+}
+
+.logistics {
+  justify-content: space-around;
+}
+
 .card-container {
   display: flex;
   flex-flow: row wrap;
   gap: 30px;
   max-width: 450px;
+}
+
+.timer {
+  text-align: center;
 }
 
 .title {
