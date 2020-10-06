@@ -6,17 +6,15 @@ const appendToCardContainer = deck => {
   const cardContainer = document.querySelector(".card-container");
   const cardContainerChildren = cardContainer.children;
 
-  // console.log(cardContainer);
   //remove all children
   for (let i = cardContainerChildren.length - 1; i >= 0; i--) {
-    console.log(cardContainerChildren[i]);
-
     cardContainerChildren[i].remove();
   }
 
-  // note: instead of removing the img from the container, just update the attribute
-  console.log("length of deck: " + deck.length);
   for (const card of deck) {
+    // if (card.getAttribute("src").includes("card")) {
+    //   toggleImgSrc(card);
+    // }
     cardContainer.appendChild(card);
   }
 };
@@ -78,7 +76,6 @@ const attachCardClickListeners = (card, concentration) => {
         const timerInterval = setInterval(
           () => {
             if (showCards === 0) {
-              console.log(timerInterval);
               clearInterval(timerInterval);
               concentration.resetChosen();
             } else {
@@ -115,7 +112,6 @@ const attachCardClickListeners = (card, concentration) => {
       selectedCard1.setAttribute("src", "./images/card" + val1 + ".png");
       selectedCard2.setAttribute("src", "./images/card" + val2 + ".png");
 
-      console.log(selectedCard2);
       //add card to complete deck
       if (!concentration.completeDeck.includes(selectedCard1)) {
         concentration.completeDeck.push(selectedCard1);
@@ -137,8 +133,6 @@ const attachCardClickListeners = (card, concentration) => {
         concentration.rounds[concentration.currentRound - 1].completed = true;
       }
     }
-
-    console.log(concentration.completeDeck);
   });
   return card;
 };
@@ -163,12 +157,6 @@ document.querySelector(".start-btn").addEventListener("click", () => {
   concentration.deal();
 
   const timer = setInterval(() => {
-    console.log(
-      "Round " +
-        concentration.currentRound +
-        " timeLeft: " +
-        concentration.rounds[concentration.currentRound - 1].timeLeft
-    );
     const timerDiv = document.querySelector(".timer");
     timerDiv.textContent =
       concentration.rounds[concentration.currentRound - 1].timeLeft + "s";
@@ -222,22 +210,36 @@ let concentration = {
   generateDeck: function(numberOfPairs) {
     this.deck = [];
     if (this.initialDeck.length < numberOfPairs) {
-      return "Error! Not enough cards loaded. Add more to initialDeck";
+      const msg =
+        "Error! Not enough cards loaded. Add more to initialDeck. initialDeck size: " +
+        this.initialDeck.length +
+        " and number of pairs requested: " +
+        numberOfPairs;
+      console.error(msg);
+
+      return msg;
+    }
+
+    const cloneInitialDeck = [];
+    for (const item of this.initialDeck) {
+      cloneInitialDeck.push(item.cloneNode());
     }
 
     // randomly select cards from initialDeck
     for (let i = 0; i < numberOfPairs; i++) {
-      const randomIndex = Math.floor(Math.random() * this.initialDeck.length);
+      const randomIndex = Math.floor(Math.random() * cloneInitialDeck.length);
 
-      const cards = copyCard(this.initialDeck[randomIndex], this);
+      const cards = copyCard(cloneInitialDeck[randomIndex], this);
 
       this.deck = this.deck.concat(cards);
-
-      this.initialDeck.splice(randomIndex, 1);
+      cloneInitialDeck.splice(randomIndex, 1);
     }
   },
   // Shuffle Method
   shuffle: function() {
+    // this.log();
+    // console.log(this.deck);
+
     const positions = [];
     const newDeck = [];
     for (let i = 0; i < this.deck.length; i++) {
@@ -257,13 +259,14 @@ let concentration = {
     }
 
     this.deck = newDeck;
+    this.resetChosen();
   },
   deal: function() {
     console.log("ROUND " + this.currentRound);
     // initialize deck
     this.generateDeck(this.rounds[this.currentRound - 1].pairs);
     this.shuffle();
-    appendToCardContainer(concentration.deck);
+    appendToCardContainer(this.deck);
   },
   clearSelected: function() {
     this.selectedCards = [];
@@ -312,9 +315,17 @@ let concentration = {
     //   completed: false
     // }
   ],
-  log: function() {
-    for (let i = 0; i < this.deck.length; i++) {
-      console.log(this.deck[i].getAttribute("value"));
+  log: function(deck) {
+    if (deck === null) {
+      deck = this.deck;
+    }
+
+    for (let i = 0; i < deck.length; i++) {
+      console.log(
+        deck[i].getAttribute("value") +
+          " - " +
+          deck[i].getAttribute("unique-id")
+      );
     }
   }
 };
