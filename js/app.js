@@ -190,7 +190,11 @@ concentration.shuffle();
 
 for (const card of concentration.deck) {
   card.addEventListener("click", () => {
-    if (concentration.gameStarted && concentration.selectedCards.length < 2) {
+    if (
+      concentration.gameStarted &&
+      concentration.selectedCards.length < 2 &&
+      !concentration.completeDeck.includes(card)
+    ) {
       toggleImgSrc(card);
       // only allow the second card chosen that is flipped up to use the timer
       if (
@@ -204,7 +208,6 @@ for (const card of concentration.deck) {
             if (showCards === 0) {
               clearInterval(timerInterval);
               concentration.resetChosen();
-              // remove click handler from card if already completed
             } else {
               showCards--;
             }
