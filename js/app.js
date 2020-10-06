@@ -56,47 +56,6 @@ const clearIntervalAndCards = (interval, card) => {
   concentration.clearSelected();
 };
 
-// figure out how to toggle src values
-const cardClick = e => {
-  // only perform clicking action if either selected card slot is null
-
-  if (
-    concentration.selectedCard1 === null ||
-    concentration.selectedCard2 === null
-  ) {
-    const card = e.target;
-
-    if (card.getAttribute("src").includes("back")) {
-      toggleImgSrc(card);
-
-      //show card for this many seconds
-      let showCard = 1;
-      const timerInterval = setInterval(() => {
-        if (showCard === 0) {
-          if (concentration.completeDeck.includes(card)) {
-            clearIntervalAndCards(timerInterval, card);
-          } else {
-            if (!card.getAttribute("src").includes("back")) {
-              toggleImgSrc(card);
-            }
-            clearInterval(timerInterval);
-
-            //clear the card from concentration object when timer expires
-            concentration.clearSelected();
-          }
-          // if card is already part of complete deck
-        } else if (concentration.completeDeck.includes(card)) {
-          clearIntervalAndCards(timerInterval, card);
-        } else {
-          showCard--;
-        }
-      }, 1000);
-    } else {
-      toggleImgSrc(card);
-    }
-  }
-};
-
 /*
  * Game Object
  */
@@ -135,14 +94,12 @@ let concentration = {
 
       //push both cards in the pair to the deck
       const card = this.initialDeck[randomIndex];
-      card.onclick = cardClick;
       //set unique ID per card in pair
       card.setAttribute("unique-id", 1);
       this.deck.push(card);
 
       // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
       const cloneCard = card.cloneNode();
-      cloneCard.onclick = cardClick;
       //set unique ID per card in pair
       cloneCard.setAttribute("unique-id", 2);
       this.deck.push(cloneCard);
@@ -220,25 +177,53 @@ concentration.shuffle();
 
 for (const card of concentration.deck) {
   card.addEventListener("click", () => {
-    if (concentration.completeDeck.includes(card)) {
-      concentration.clearSelected();
-    }
-  });
-
-  card.addEventListener("click", () => {
     if (concentration.selectedCard1 === null) {
       concentration.selectedCard1 = card;
     } else if (concentration.selectedCard2 === null) {
       concentration.selectedCard2 = card;
     }
+
+    console.log(concentration.selectedCard1);
+    // console.log(concentration.selectedCard2);
+
+    if (card.getAttribute("src").includes("back")) {
+      toggleImgSrc(card);
+
+      //show card for this many seconds
+      let showCard = 1;
+      const timerInterval = setInterval(() => {
+        if (showCard === 0) {
+          if (concentration.completeDeck.includes(card)) {
+            clearIntervalAndCards(timerInterval, card);
+          } else {
+            if (!card.getAttribute("src").includes("back")) {
+              toggleImgSrc(card);
+            }
+            clearInterval(timerInterval);
+
+            //clear the card from concentration object when timer expires
+            //NOTE: choosing a card immediately after the first two cards won't match. need to prevent clickability of new cards after 2 in a row are chosen, OR enable continuous 2 card clicking
+            console.log(card);
+            console.log(concentration.selectedCard1);
+            concentration.clearSelected();
+          }
+          // if card is already part of complete deck
+        } else if (concentration.completeDeck.includes(card)) {
+          clearIntervalAndCards(timerInterval, card);
+        } else {
+          showCard--;
+        }
+      }, 1000);
+    } else {
+      toggleImgSrc(card);
+    }
   });
 
+  //event listener for setting up win condition
   card.addEventListener("click", () => {
     const selectedCard1 = concentration.selectedCard1;
     const selectedCard2 = concentration.selectedCard2;
 
-    console.log(selectedCard1);
-    console.log(selectedCard2);
     if (checkCards(selectedCard1, selectedCard2)) {
       const val1 = selectedCard1.getAttribute("value");
       const val2 = selectedCard2.getAttribute("value");
@@ -253,9 +238,9 @@ for (const card of concentration.deck) {
       if (!concentration.completeDeck.includes(selectedCard2)) {
         concentration.completeDeck.push(selectedCard2);
       }
-    }
 
-    console.log(concentration.completeDeck);
+      concentration.clearSelected();
+    }
   });
 }
 
