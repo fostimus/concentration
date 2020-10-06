@@ -170,11 +170,40 @@ let concentration = {
 
     this.clearSelected();
   },
-
-  round: {
-    number: 1,
-    timeLeft: 30
-  },
+  currentRound: 1,
+  rounds: [
+    {
+      number: 1,
+      pairs: 3,
+      timeLeft: 20,
+      completed: false
+    },
+    {
+      number: 2,
+      pairs: 6,
+      timeLeft: 30,
+      completed: false
+    },
+    {
+      number: 3,
+      pairs: 9,
+      timeLeft: 40,
+      completed: false
+    },
+    {
+      number: 4,
+      pairs: 12,
+      timeLeft: 50,
+      completed: false
+    }
+    // ,
+    // {
+    //   number: 5,
+    //   pairs: 15,
+    //   timeLeft: 60,
+    //   completed: false
+    // }
+  ],
   log: function() {
     for (let i = 0; i < this.deck.length; i++) {
       console.log(this.deck[i].getAttribute("value"));
@@ -182,16 +211,38 @@ let concentration = {
   }
 };
 
+// load cards into JS
+concentration.loadCards();
+
 /*
  * Game Play
  */
-const pairs = 3;
 
+let testRound = false;
+
+document.querySelector(".start-btn").addEventListener("click", () => {
+  concentration.gameStarted = true;
+
+  const timer = setInterval(() => {
+    const timerDiv = document.querySelector(".timer");
+    timerDiv.textContent = concentration.rounds[0].timeLeft + "s";
+
+    if (concentration.rounds[0].timeLeft === 0) {
+      clearInterval(timer);
+    } else {
+      concentration.rounds[0].timeLeft--;
+    }
+  }, 1000);
+});
+
+// for (const round of concentration.rounds) {
+console.log("ROUND 1");
 // initialize deck
-concentration.loadCards();
-concentration.generateDeck(pairs);
+concentration.generateDeck(3);
 concentration.shuffle();
+appendToCardContainer(concentration.deck);
 
+// append event listeners to each card
 for (const card of concentration.deck) {
   card.addEventListener("click", () => {
     if (
@@ -266,28 +317,15 @@ for (const card of concentration.deck) {
         newDiv.innerHTML = "You win!";
 
         document.querySelector(".game-play").appendChild(newDiv);
+
+        // round is over, update round object boolean
+        // round[round.number - 1].completed = true;
       }
     }
 
     console.log(concentration.completeDeck);
   });
 }
-
-document.querySelector(".start-btn").addEventListener("click", () => {
-  concentration.gameStarted = true;
-
-  const timer = setInterval(() => {
-    if (concentration.round.timeLeft === 0) {
-      clearInterval(timer);
-    } else {
-      const timerDiv = document.querySelector(".timer");
-      timerDiv.textContent = concentration.round.timeLeft + "s";
-      concentration.round.timeLeft--;
-    }
-  }, 1000);
-});
-
-appendToCardContainer(concentration.deck);
 
 //after pushing start
 // appendToCardContainer(concentration.deck);
