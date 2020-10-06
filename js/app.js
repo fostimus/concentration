@@ -154,37 +154,40 @@ const copyCard = (card, concentration) => {
 
 let pauseTimer = false;
 
+//next round button only enabled when previous round completes, see start button click handler
 const nextRoundBtn = document.querySelector(".next-round-btn");
+nextRoundBtn.disabled = true;
 
 nextRoundBtn.addEventListener("click", () => {
   pauseTimer = false;
   concentration.deal();
+  nextRoundBtn.setAttribute("value", concentration.currentRound);
+  nextRoundBtn.disabled = true;
 });
 
-document.querySelector(".start-btn").addEventListener("click", () => {
+const startBtn = document.querySelector(".start-btn");
+
+startBtn.addEventListener("click", () => {
   concentration.gameStarted = true;
+  startBtn.disabled = true;
+  nextRoundBtn.setAttribute("value", concentration.currentRound);
   concentration.deal();
 
   const timer = setInterval(() => {
     if (!pauseTimer) {
-      console.log(
-        concentration.rounds[concentration.currentRound - 1].timeLeft
-      );
       const timerDiv = document.querySelector(".timer");
 
       if (concentration.rounds[concentration.currentRound - 1].timeLeft === 0) {
         timerDiv.textContent = "------";
         clearInterval(timer);
-      } else if (
-        concentration.rounds[concentration.currentRound - 1].completed
-      ) {
-        console.log(
-          concentration.rounds[concentration.currentRound - 1].timeLeft
-        );
+      }
+      // if the round is completed, pause the timer, clear the completed deck, and enable the next round button
+      else if (concentration.rounds[concentration.currentRound - 1].completed) {
         timerDiv.textContent = "------";
         concentration.completeDeck = [];
         // if completed, move on to next round and PAUSE until click
         concentration.currentRound++;
+        nextRoundBtn.disabled = false;
         pauseTimer = true;
       } else {
         concentration.rounds[concentration.currentRound - 1].timeLeft--;
