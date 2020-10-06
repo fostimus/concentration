@@ -68,7 +68,7 @@ const convertSeconds = seconds => {
  */
 let concentration = {
   // turnSpeed is in seconds, takes decimals as well.
-  turnSpeed: 1,
+  turnSpeed: 0.5,
 
   selectedCards: [],
 
