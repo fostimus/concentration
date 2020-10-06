@@ -152,26 +152,45 @@ const copyCard = (card, concentration) => {
   return cardHolder;
 };
 
+let pauseTimer = false;
+
+const nextRoundBtn = document.querySelector(".next-round-btn");
+
+nextRoundBtn.addEventListener("click", () => {
+  pauseTimer = false;
+  concentration.deal();
+});
+
 document.querySelector(".start-btn").addEventListener("click", () => {
   concentration.gameStarted = true;
   concentration.deal();
 
   const timer = setInterval(() => {
-    const timerDiv = document.querySelector(".timer");
-    timerDiv.textContent =
-      concentration.rounds[concentration.currentRound - 1].timeLeft + "s";
+    if (!pauseTimer) {
+      console.log(
+        concentration.rounds[concentration.currentRound - 1].timeLeft
+      );
+      const timerDiv = document.querySelector(".timer");
 
-    if (
-      concentration.rounds[concentration.currentRound - 1].timeLeft === 0 ||
-      concentration.rounds[concentration.currentRound - 1].completed
-    ) {
-      clearInterval(timer);
-    } else {
-      concentration.rounds[concentration.currentRound - 1].timeLeft--;
-    }
-
-    if (concentration.rounds[concentration.currentRound - 1].completed) {
-      concentration.currentRound++;
+      if (concentration.rounds[concentration.currentRound - 1].timeLeft === 0) {
+        timerDiv.textContent = "------";
+        clearInterval(timer);
+      } else if (
+        concentration.rounds[concentration.currentRound - 1].completed
+      ) {
+        console.log(
+          concentration.rounds[concentration.currentRound - 1].timeLeft
+        );
+        timerDiv.textContent = "------";
+        concentration.completeDeck = [];
+        // if completed, move on to next round and PAUSE until click
+        concentration.currentRound++;
+        pauseTimer = true;
+      } else {
+        concentration.rounds[concentration.currentRound - 1].timeLeft--;
+        timerDiv.textContent =
+          concentration.rounds[concentration.currentRound - 1].timeLeft + "s";
+      }
     }
   }, 1000);
 });
@@ -237,9 +256,6 @@ let concentration = {
   },
   // Shuffle Method
   shuffle: function() {
-    // this.log();
-    // console.log(this.deck);
-
     const positions = [];
     const newDeck = [];
     for (let i = 0; i < this.deck.length; i++) {
@@ -292,19 +308,19 @@ let concentration = {
     {
       number: 2,
       pairs: 6,
-      timeLeft: 30,
+      timeLeft: 40,
       completed: false
     },
     {
       number: 3,
       pairs: 9,
-      timeLeft: 40,
+      timeLeft: 60,
       completed: false
     },
     {
       number: 4,
       pairs: 12,
-      timeLeft: 50,
+      timeLeft: 80,
       completed: false
     }
     // ,
