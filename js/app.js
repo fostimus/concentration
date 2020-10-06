@@ -124,7 +124,6 @@ const attachCardClickListeners = (card, concentration) => {
       concentration.clearSelected();
 
       if (concentration.completeDeck.length === concentration.deck.length) {
-        console.log("heheeeellloo");
         const newDiv = document.createElement("div");
 
         newDiv.innerHTML = "You win!";
@@ -132,7 +131,7 @@ const attachCardClickListeners = (card, concentration) => {
         document.querySelector(".game-play").appendChild(newDiv);
 
         // round is over, update round object boolean
-        // round[round.number - 1].completed = true;
+        concentration.rounds[concentration.currentRound - 1].completed = true;
       }
     }
 
@@ -197,10 +196,8 @@ let concentration = {
       const randomIndex = Math.floor(Math.random() * this.initialDeck.length);
 
       const cards = copyCard(this.initialDeck[randomIndex], this);
-      console.log(cards);
 
       this.deck = this.deck.concat(cards);
-      console.log(this.deck);
 
       this.initialDeck.splice(randomIndex, 1);
     }
@@ -228,29 +225,12 @@ let concentration = {
     this.deck = newDeck;
   },
   deal: function() {
-    if (this.deck.length <= 0) {
-      alert("No more cards in deck!");
-      return;
-    } else {
-      //remove both current cards
-      document.querySelector(".playerCard").remove();
-      document.querySelector(".cpuCard").remove();
-
-      // deal new player card, set class
-      const newPlayerCard = this.deck.shift();
-      newPlayerCard.setAttribute("class", "playerCard");
-
-      // deal new cpu card, set class
-      const newCpuCard = this.deck.shift();
-      newCpuCard.setAttribute("class", "cpuCard");
-
-      // append dealt cards to card container
-      const cardContainer = document.querySelector(".container");
-      cardContainer.appendChild(newPlayerCard);
-      cardContainer.appendChild(newCpuCard);
-    }
+    console.log("ROUND " + this.currentRound);
+    // initialize deck
+    this.generateDeck(this.rounds[this.currentRound - 1].pairs);
+    this.shuffle();
+    appendToCardContainer(concentration.deck);
   },
-
   clearSelected: function() {
     this.selectedCards = [];
   },
@@ -316,6 +296,7 @@ let testRound = false;
 
 document.querySelector(".start-btn").addEventListener("click", () => {
   concentration.gameStarted = true;
+  concentration.deal();
 
   const timer = setInterval(() => {
     const timerDiv = document.querySelector(".timer");
@@ -326,23 +307,9 @@ document.querySelector(".start-btn").addEventListener("click", () => {
     } else {
       concentration.rounds[0].timeLeft--;
     }
+
+    if (concentration.rounds[concentration.currentRound - 1].completed) {
+      concentration.currentRound++;
+    }
   }, 1000);
 });
-
-// for (const round of concentration.rounds) {
-console.log("ROUND 1");
-// initialize deck
-concentration.generateDeck(3);
-concentration.shuffle();
-appendToCardContainer(concentration.deck);
-
-// append event listeners to each card
-//event listener for setting up win condition
-for (const card of concentration.deck) {
-  card;
-
-  card;
-}
-
-//after pushing start
-// appendToCardContainer(concentration.deck);
