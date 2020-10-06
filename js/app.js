@@ -171,6 +171,10 @@ let concentration = {
     this.clearSelected();
   },
 
+  round: {
+    number: 1,
+    timeLeft: 30
+  },
   log: function() {
     for (let i = 0; i < this.deck.length; i++) {
       console.log(this.deck[i].getAttribute("value"));
@@ -206,6 +210,7 @@ for (const card of concentration.deck) {
         const timerInterval = setInterval(
           () => {
             if (showCards === 0) {
+              console.log(timerInterval);
               clearInterval(timerInterval);
               concentration.resetChosen();
             } else {
@@ -270,6 +275,16 @@ for (const card of concentration.deck) {
 
 document.querySelector(".start-btn").addEventListener("click", () => {
   concentration.gameStarted = true;
+
+  const timer = setInterval(() => {
+    if (concentration.round.timeLeft === 0) {
+      clearInterval(timer);
+    } else {
+      const timerDiv = document.querySelector(".timer");
+      timerDiv.textContent = concentration.round.timeLeft + "s";
+      concentration.round.timeLeft--;
+    }
+  }, 1000);
 });
 
 appendToCardContainer(concentration.deck);
