@@ -20,12 +20,14 @@
 .game-play,
 .logistics,
 .sixcol,
-.buttons {
+.buttons,
+.round-win {
   display: flex;
   flex-flow: column wrap;
 }
 
 .game-play {
+  position: relative;
   gap: 40px;
 }
 
@@ -45,7 +47,10 @@
 }
 
 .logistics {
-  justify-content: space-around;
+  position: relative;
+  top: 50px;
+  justify-content: center;
+  gap: 50px;
 }
 
 .buttons {
@@ -53,6 +58,16 @@
   margin: 0 auto;
   gap: 30px;
   justify-content: space-around;
+}
+
+.round-win {
+  z-index: 1;
+  position: absolute;
+  height: 50%;
+  width: 50%;
+  background-color: #426a5a;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 984px) {
@@ -86,7 +101,12 @@ body {
   font-size: 18px;
 }
 
-button {
+button:hover {
+  background-color: #ebebeb;
+}
+
+button,
+button:disabled {
   background-color: #9882ac;
   font-size: 20px;
   border-radius: 10px;

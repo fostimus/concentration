@@ -169,8 +169,10 @@ const attachCardClickListeners = (card, concentration) => {
 
       if (concentration.completeDeck.length === concentration.deck.length) {
         const newDiv = document.createElement("div");
+        newDiv.classList.add("round-win");
+        // newDiv.style = "";
 
-        newDiv.innerHTML = "You win!";
+        newDiv.innerHTML = "You won round " + concentration.currentRound + "!";
 
         document.querySelector(".game-play").appendChild(newDiv);
 
