@@ -1,7 +1,6 @@
 /*
  * DOM Manipulation
  */
-
 const appendToCardContainer = deck => {
   const cardContainer = document.querySelector(".card-container");
   const cardContainerChildren = cardContainer.children;
@@ -75,6 +74,9 @@ const toggleImgSrc = card => {
   }
 };
 
+/**
+ * helper functions
+ */
 const checkCards = (card1, card2) => {
   if (card1 !== null && card2 !== null) {
     const val1 = card1.getAttribute("value");
@@ -103,6 +105,69 @@ const convertSeconds = seconds => {
   return seconds;
 };
 
+/**
+ * buttons and click listeners
+ */
+let pauseTimer = false;
+
+//next round button only enabled when previous round completes, see start button click handler
+const nextRoundBtn = document.createElement("button");
+nextRoundBtn.textContent = "Next Round";
+nextRoundBtn.classList.add("next-round-btn");
+nextRoundBtn.disabled = true;
+
+nextRoundBtn.addEventListener("click", () => {
+  // un pause timer, deal new deck
+  pauseTimer = false;
+  concentration.deal();
+  nextRoundBtn.disabled = true;
+
+  // remove modal from screen
+  document.querySelector(".round-win").remove();
+});
+
+const startBtn = document.querySelector(".start-btn");
+
+startBtn.addEventListener("click", () => {
+  concentration.gameStarted = true;
+  startBtn.disabled = true;
+  concentration.deal();
+
+  const timer = setInterval(() => {
+    if (!pauseTimer) {
+      const timerDiv = document.querySelector(".timer");
+
+      // if a round expires, clear the timer, set the round to 1, and enable the start button
+      if (concentration.rounds[concentration.currentRound - 1].timeLeft === 0) {
+        timerDiv.textContent = "------";
+        clearInterval(timer);
+        concentration.currentRound = 1;
+        startBtn.disabled = false;
+      }
+      // if the round is completed, pause the timer, clear the completed deck, and enable the next round button
+      else if (concentration.rounds[concentration.currentRound - 1].completed) {
+        concentration.completeDeck = [];
+        // if completed, move on to next round and PAUSE until click
+        concentration.currentRound++;
+        nextRoundBtn.disabled = false;
+        pauseTimer = true;
+      } else {
+        concentration.rounds[concentration.currentRound - 1].timeLeft--;
+        timerDiv.innerHTML =
+          "<h2>" +
+          concentration.rounds[concentration.currentRound - 1].timeLeft +
+          " seconds left</h2> in round: <strong>" +
+          concentration.currentRound +
+          "</strong> of " +
+          concentration.rounds.length;
+      }
+    }
+  }, 1000);
+});
+
+/**
+ * Card click listeners
+ */
 const attachCardClickListeners = (card, concentration) => {
   card.addEventListener("click", () => {
     if (
@@ -174,6 +239,8 @@ const attachCardClickListeners = (card, concentration) => {
 
         newDiv.innerHTML = "You won round " + concentration.currentRound + "!";
 
+        newDiv.appendChild(nextRoundBtn);
+
         document.querySelector(".game-play").appendChild(newDiv);
 
         // round is over, update round object boolean
@@ -198,58 +265,6 @@ const copyCard = (card, concentration) => {
 
   return cardHolder;
 };
-
-let pauseTimer = false;
-
-//next round button only enabled when previous round completes, see start button click handler
-const nextRoundBtn = document.querySelector(".next-round-btn");
-nextRoundBtn.disabled = true;
-
-nextRoundBtn.addEventListener("click", () => {
-  pauseTimer = false;
-  concentration.deal();
-  nextRoundBtn.disabled = true;
-});
-
-const startBtn = document.querySelector(".start-btn");
-
-startBtn.addEventListener("click", () => {
-  concentration.gameStarted = true;
-  startBtn.disabled = true;
-  concentration.deal();
-
-  const timer = setInterval(() => {
-    if (!pauseTimer) {
-      const timerDiv = document.querySelector(".timer");
-
-      // if a round expires, clear the timer, set the round to 1, and enable the start button
-      if (concentration.rounds[concentration.currentRound - 1].timeLeft === 0) {
-        timerDiv.textContent = "------";
-        clearInterval(timer);
-        concentration.currentRound = 1;
-        startBtn.disabled = false;
-      }
-      // if the round is completed, pause the timer, clear the completed deck, and enable the next round button
-      else if (concentration.rounds[concentration.currentRound - 1].completed) {
-        timerDiv.textContent = "------";
-        concentration.completeDeck = [];
-        // if completed, move on to next round and PAUSE until click
-        concentration.currentRound++;
-        nextRoundBtn.disabled = false;
-        pauseTimer = true;
-      } else {
-        concentration.rounds[concentration.currentRound - 1].timeLeft--;
-        timerDiv.innerHTML =
-          "<h2>" +
-          concentration.rounds[concentration.currentRound - 1].timeLeft +
-          " seconds left</h2> in round: <strong>" +
-          concentration.currentRound +
-          "</strong> of " +
-          concentration.rounds.length;
-      }
-    }
-  }, 1000);
-});
 
 /*
  * Game Object
