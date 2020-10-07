@@ -229,8 +229,13 @@ startBtn.addEventListener("click", () => {
         pauseTimer = true;
       } else {
         concentration.rounds[concentration.currentRound - 1].timeLeft--;
-        timerDiv.textContent =
-          concentration.rounds[concentration.currentRound - 1].timeLeft + "s";
+        timerDiv.innerHTML =
+          "<h2>" +
+          concentration.rounds[concentration.currentRound - 1].timeLeft +
+          " seconds left</h2> in round: <strong>" +
+          concentration.currentRound +
+          "</strong> of " +
+          concentration.rounds.length;
       }
     }
   }, 1000);

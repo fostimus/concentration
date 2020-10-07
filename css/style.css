@@ -28,26 +28,25 @@
   flex-flow: row wrap;
   gap: 30px;
   max-width: 900px;
+  margin: 0 auto;
 }
 
 .row {
   display: flex;
+  flex-wrap: wrap;
   gap: 30px;
   margin: 0 auto;
 }
 
-/* grid CSS, playing around */
-/* .card-container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  grid-column-gap: 20px;
-  grid-row-gap: 20px;
-} */
-
-@media (max-width: 1000px) {
+@media (max-width: 1500px) {
   .main {
     flex-flow: column wrap;
+  }
+}
+
+@media (max-width: 984px) {
+  .row {
+    max-width: 500px;
   }
 }
 
