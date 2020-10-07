@@ -107,7 +107,16 @@ const convertSeconds = seconds => {
 
 const createModal = (cssClass, text, children) => {
   const newModal = document.createElement("div");
-  newModal.classList.add(cssClass);
+
+  if (cssClass !== null) {
+    if (Array.isArray(cssClass)) {
+      for (const css of cssClass) {
+        newModal.classList.add(css);
+      }
+    } else {
+      newModal.classList.add(cssClass);
+    }
+  }
 
   if (text !== null) {
     newModal.textContent = text;
@@ -183,10 +192,19 @@ startBtn.addEventListener("click", () => {
       // if the round is completed, pause the timer, clear the completed deck, and enable the next round button
       else if (concentration.rounds[concentration.currentRound - 1].completed) {
         concentration.completeDeck = [];
-        // if completed, move on to next round and PAUSE until click
+        // if completed, move on to next round
         concentration.currentRound++;
-        nextRoundBtn.disabled = false;
-        pauseTimer = true;
+
+        // if current round is greater than the length of the round array, all rounds completed = game over (Win!).
+        if (concentration.currentRound > concentration.rounds.length) {
+          clearInterval(timer);
+        }
+        //otherwise, enable the next round button and unpause the timer
+        //and PAUSE until click
+        else {
+          nextRoundBtn.disabled = false;
+          pauseTimer = true;
+        }
       } else {
         concentration.rounds[concentration.currentRound - 1].timeLeft--;
         timerDiv.innerHTML =
@@ -269,18 +287,32 @@ const attachCardClickListeners = (card, concentration) => {
       concentration.clearSelected();
 
       if (concentration.completeDeck.length === concentration.deck.length) {
-        const roundWinModal = createModal(
-          "round-win-parent",
-          null,
-          createModal(
-            "round-win",
-            "You won round " + concentration.currentRound + "!",
-            nextRoundBtn
-          )
-        );
+        // if the current round is the same as the length as the round array, the game is over
+        if (concentration.currentRound === concentration.rounds.length) {
+          //append end modal
+          const endModal = createModal(
+            "end-modal-parent",
+            null,
+            createModal(["end", "modal"], "YOU BEAT THE GAME!", null)
+          );
 
-        //insert next round modal
-        document.querySelector(".game-play").appendChild(roundWinModal);
+          document.querySelector(".main").appendChild(endModal);
+        }
+        // otherwise, the end of the round is over
+        else {
+          const roundWinModal = createModal(
+            "round-win-parent",
+            null,
+            createModal(
+              ["round-win", "modal"],
+              "You won round " + concentration.currentRound + "!",
+              nextRoundBtn
+            )
+          );
+
+          //insert next round modal
+          document.querySelector(".game-play").appendChild(roundWinModal);
+        }
 
         // round is over, update round object boolean
         concentration.rounds[concentration.currentRound - 1].completed = true;
