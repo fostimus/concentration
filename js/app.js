@@ -105,6 +105,42 @@ const convertSeconds = seconds => {
   return seconds;
 };
 
+const createModal = (cssClass, text, children) => {
+  const newModal = document.createElement("div");
+  newModal.classList.add(cssClass);
+
+  if (text !== null) {
+    newModal.textContent = text;
+  }
+
+  if (children !== null) {
+    if (Array.isArray(children)) {
+      for (const child of children) {
+        newModal.appendChild(child);
+      }
+    } else {
+      newModal.appendChild(children);
+    }
+  }
+
+  return newModal;
+};
+
+const copyCard = (card, concentration) => {
+  const cardHolder = [];
+  //set unique ID per card in pair
+  card.setAttribute("unique-id", 1);
+  cardHolder.push(attachCardClickListeners(card, concentration));
+
+  // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
+  const cloneCard = card.cloneNode();
+  //set unique ID per card in pair
+  cloneCard.setAttribute("unique-id", 2);
+  cardHolder.push(attachCardClickListeners(cloneCard, concentration));
+
+  return cardHolder;
+};
+
 /**
  * buttons and click listeners
  */
@@ -123,7 +159,7 @@ nextRoundBtn.addEventListener("click", () => {
   nextRoundBtn.disabled = true;
 
   // remove modal from screen
-  document.querySelector(".round-win").remove();
+  document.querySelector(".round-win-parent").remove();
 });
 
 const startBtn = document.querySelector(".start-btn");
@@ -233,15 +269,18 @@ const attachCardClickListeners = (card, concentration) => {
       concentration.clearSelected();
 
       if (concentration.completeDeck.length === concentration.deck.length) {
-        const newDiv = document.createElement("div");
-        newDiv.classList.add("round-win");
-        // newDiv.style = "";
+        const roundWinModal = createModal(
+          "round-win-parent",
+          null,
+          createModal(
+            "round-win",
+            "You won round " + concentration.currentRound + "!",
+            nextRoundBtn
+          )
+        );
 
-        newDiv.innerHTML = "You won round " + concentration.currentRound + "!";
-
-        newDiv.appendChild(nextRoundBtn);
-
-        document.querySelector(".game-play").appendChild(newDiv);
+        //insert next round modal
+        document.querySelector(".game-play").appendChild(roundWinModal);
 
         // round is over, update round object boolean
         concentration.rounds[concentration.currentRound - 1].completed = true;
@@ -249,21 +288,6 @@ const attachCardClickListeners = (card, concentration) => {
     }
   });
   return card;
-};
-
-const copyCard = (card, concentration) => {
-  const cardHolder = [];
-  //set unique ID per card in pair
-  card.setAttribute("unique-id", 1);
-  cardHolder.push(attachCardClickListeners(card, concentration));
-
-  // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
-  const cloneCard = card.cloneNode();
-  //set unique ID per card in pair
-  cloneCard.setAttribute("unique-id", 2);
-  cardHolder.push(attachCardClickListeners(cloneCard, concentration));
-
-  return cardHolder;
 };
 
 /*
