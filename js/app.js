@@ -11,8 +11,48 @@ const appendToCardContainer = deck => {
     cardContainerChildren[i].remove();
   }
 
-  for (const card of deck) {
-    cardContainer.appendChild(card);
+  /*
+   * 6 - 2 rows, 3 columns
+   * 12 - 4 rows, 3 columns
+   * 18 - 3 rows, 6 columns
+   * 24 - 4 rows, 6 columns
+   * 30 - 5 rows, 6 columns
+   */
+
+  let rows;
+  let cols;
+  switch (deck.length) {
+    case 6:
+      rows = 2;
+      cols = 3;
+      break;
+    case 12:
+      rows = 4;
+      cols = 3;
+      break;
+    case 18:
+      rows = 3;
+      cols = 6;
+      break;
+    case 24:
+      rows = 4;
+      cols = 6;
+      break;
+    case 30:
+      rows = 5;
+      cols = 6;
+      break;
+  }
+
+  let index = 0;
+  for (let i = 0; i < rows; i++) {
+    const newContainer = document.createElement("div");
+    newContainer.classList.add("row");
+    for (let j = 0; j < cols; j++) {
+      newContainer.appendChild(deck[index]);
+      index++;
+    }
+    cardContainer.appendChild(newContainer);
   }
 };
 
