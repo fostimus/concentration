@@ -61,6 +61,8 @@
   background-color: #426a5a;
   justify-content: center;
   align-items: center;
+  /* align-self centers along cross axis (x axis), but not sure how to center vertically */
+  align-self: center;
 }
 
 @media (max-width: 984px) {
