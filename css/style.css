@@ -9,6 +9,10 @@
   margin: 50px;
 }
 
+.sixcol {
+  flex-flow: column wrap;
+}
+
 .game-play,
 .logistics {
   display: flex;
@@ -38,15 +42,15 @@
   margin: 0 auto;
 }
 
-@media (max-width: 1500px) {
-  .main {
-    flex-flow: column wrap;
-  }
-}
-
 @media (max-width: 984px) {
   .row {
     max-width: 500px;
+  }
+}
+
+@media (max-width: 900px) {
+  .main {
+    flex-flow: column wrap;
   }
 }
 

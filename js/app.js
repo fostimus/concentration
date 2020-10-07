@@ -21,6 +21,7 @@ const appendToCardContainer = deck => {
 
   let rows;
   let cols;
+  let sixcol = null;
   switch (deck.length) {
     case 6:
       rows = 2;
@@ -33,14 +34,17 @@ const appendToCardContainer = deck => {
     case 18:
       rows = 3;
       cols = 6;
+      sixcol = "sixcol";
       break;
     case 24:
       rows = 4;
       cols = 6;
+      sixcol = "sixcol";
       break;
     case 30:
       rows = 5;
       cols = 6;
+      sixcol = "sixcol";
       break;
   }
 
@@ -53,6 +57,10 @@ const appendToCardContainer = deck => {
       index++;
     }
     cardContainer.appendChild(newContainer);
+  }
+
+  if (sixcol !== null) {
+    document.querySelector(".main").classList.add(sixcol);
   }
 };
 
