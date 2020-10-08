@@ -1,3 +1,5 @@
+// note: the theme functionality requires `themes.js` to be loaded before this file
+
 /*
  * DOM Manipulation
  */
@@ -153,6 +155,11 @@ const copyCard = (card, concentration) => {
 /**
  * buttons and click listeners
  */
+const themeBtn = document.querySelector(".theme-btn");
+themeBtn.addEventListener("click", () => {
+  concentration.toggleTheme(false);
+});
+
 let pauseTimer = false;
 
 //next round button only enabled when previous round completes, see start button click handler
@@ -367,6 +374,51 @@ let concentration = {
 
   gameStarted: false,
 
+  currentTheme: 0,
+
+  themes: themes,
+
+  currentRound: 1,
+
+  rounds: [
+    {
+      number: 1,
+      pairs: 3,
+      originalTimeLeft: 20,
+      timeLeft: 20,
+      completed: false
+    },
+    {
+      number: 2,
+      pairs: 6,
+      originalTimeLeft: 40,
+      timeLeft: 40,
+      completed: false
+    },
+    {
+      number: 3,
+      pairs: 9,
+      originalTimeLeft: 60,
+      timeLeft: 60,
+      completed: false
+    },
+    {
+      number: 4,
+      pairs: 12,
+      originalTimeLeft: 80,
+      timeLeft: 80,
+      completed: false
+    }
+    // ,
+    // {
+    //   number: 5,
+    //   pairs: 15,
+    // originalTimeLeft: 100,
+    //   timeLeft: 100,
+    //   completed: false
+    // }
+  ],
+
   loadCards: function() {
     // load card imgs into initial deck
     // TODO: going to need more cards. MAX pairs at the moment: 13
@@ -453,45 +505,6 @@ let concentration = {
 
     this.clearSelected();
   },
-  currentRound: 1,
-  rounds: [
-    {
-      number: 1,
-      pairs: 3,
-      originalTimeLeft: 20,
-      timeLeft: 20,
-      completed: false
-    },
-    {
-      number: 2,
-      pairs: 6,
-      originalTimeLeft: 40,
-      timeLeft: 40,
-      completed: false
-    },
-    {
-      number: 3,
-      pairs: 9,
-      originalTimeLeft: 60,
-      timeLeft: 60,
-      completed: false
-    },
-    {
-      number: 4,
-      pairs: 12,
-      originalTimeLeft: 80,
-      timeLeft: 80,
-      completed: false
-    }
-    // ,
-    // {
-    //   number: 5,
-    //   pairs: 15,
-    // originalTimeLeft: 100,
-    //   timeLeft: 100,
-    //   completed: false
-    // }
-  ],
   resetGame: function() {
     this.completeDeck = [];
     for (const round of this.rounds) {
@@ -499,6 +512,50 @@ let concentration = {
       round.completed = false;
     }
     this.currentRound = 1;
+  },
+  toggleTheme: function(randomize) {
+    if (this.themes) {
+      let root = document.documentElement;
+      //randomly select theme
+      if (randomize) {
+        this.currentTheme = Math.floor(Math.random() * this.themes.length);
+      } else {
+        this.currentTheme++;
+        if (this.currentTheme === this.themes.length) {
+          this.currentTheme = 0;
+        }
+      }
+
+      root.style.setProperty(
+        "--bg-color",
+        this.themes[this.currentTheme].bgColor
+      );
+      root.style.setProperty(
+        "--text-color",
+        this.themes[this.currentTheme].textColor
+      );
+      root.style.setProperty(
+        "--modal-bg-color",
+        this.themes[this.currentTheme].modalBgColor
+      );
+      root.style.setProperty(
+        "--modal-border-color",
+        this.themes[this.currentTheme].modalBorderColor
+      );
+      root.style.setProperty(
+        "--btn-bg-color",
+        this.themes[this.currentTheme].btnBgColor
+      );
+      root.style.setProperty(
+        "--btn-hover-color",
+        this.themes[this.currentTheme].btnHoverColor
+      );
+      root.style.setProperty(
+        "--btn-border-color",
+        this.themes[this.currentTheme].btnBorderColor
+      );
+      root.style.setProperty("--font", this.themes[this.currentTheme].font);
+    }
   },
   log: function(deck) {
     if (deck === null) {
