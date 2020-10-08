@@ -127,6 +127,7 @@ button:hover {
 button,
 button:disabled {
   background-color: var(--btn-bg-color);
+  color: var(--text-color);
   font-size: 20px;
   border-radius: 10px;
   border: 1px solid var(--btn-border-color);
