@@ -69,17 +69,19 @@ const appendToCardContainer = deck => {
 };
 
 const toggleImgSrc = card => {
-  if (card.getAttribute("src").includes("card")) {
+  if (card.getAttribute("style").includes("card")) {
     card.setAttribute(
-      "src",
-      concentration.themes[concentration.currentTheme].cardBack
+      "style",
+      'background: no-repeat url("' +
+        concentration.themes[concentration.currentTheme].cardBack +
+        '");'
     );
   } else {
     let cardSrc = concentration.themes[concentration.currentTheme].cardFront;
 
     cardSrc = cardSrc.replace("x", card.getAttribute("value"));
 
-    card.setAttribute("src", cardSrc);
+    card.setAttribute("style", 'background: no-repeat url("' + cardSrc + '");');
   }
 };
 
@@ -275,7 +277,7 @@ const attachCardClickListeners = (card, concentration) => {
       toggleImgSrc(card);
       // only allow the second card chosen that is flipped up to use the timer
       if (
-        !card.getAttribute("src").includes("back") &&
+        !card.getAttribute("style").includes("back.png") &&
         concentration.selectedCards.length === 1
       ) {
         let showCards =
@@ -296,7 +298,7 @@ const attachCardClickListeners = (card, concentration) => {
       }
 
       // if the card is flipped up, add the card to selected cards
-      if (!card.getAttribute("src").includes("back")) {
+      if (!card.getAttribute("style").includes("back.png")) {
         concentration.selectedCards.push(card);
       } // if the card selected is already in selected cards, clear all (turn over)
       else if (concentration.selectedCards.includes(card)) {
@@ -323,8 +325,14 @@ const attachCardClickListeners = (card, concentration) => {
       const card2Src = cardSrc.replace("x", val2);
 
       //permanently keep it face up
-      selectedCard1.setAttribute("src", card1Src);
-      selectedCard2.setAttribute("src", card2Src);
+      selectedCard1.setAttribute(
+        "style",
+        'background: no-repeat url("' + card1Src + '");'
+      );
+      selectedCard2.setAttribute(
+        "style",
+        'background: no-repeat url("' + card2Src + '");'
+      );
 
       //add card to complete deck
       if (!concentration.completeDeck.includes(selectedCard1)) {
@@ -443,8 +451,13 @@ let concentration = {
     // load card imgs into initial deck
     // TODO: going to need more cards. MAX pairs at the moment: 13
     for (let i = 2; i < 15; i++) {
-      const card = document.createElement("img");
-      card.setAttribute("src", this.themes[this.currentTheme].cardBack);
+      const card = document.createElement("div");
+      card.setAttribute(
+        "style",
+        'background: no-repeat url("' +
+          this.themes[this.currentTheme].cardBack +
+          '");'
+      );
 
       // TODO: nice to have stretch goal: hash value to hide value
       card.setAttribute("value", i);
@@ -523,7 +536,7 @@ let concentration = {
 
   resetChosen: function() {
     for (const card of this.selectedCards) {
-      if (!card.getAttribute("src").includes("back")) {
+      if (!card.getAttribute("style").includes("back.png")) {
         toggleImgSrc(card);
       }
     }
@@ -589,8 +602,8 @@ let concentration = {
       // contains back? change to appropriate themed img also has back
 
       for (const card of this.deck) {
-        if (card.getAttribute("src").includes("back")) {
-          card.setAttribute("src", this.themes[this.currentTheme].cardBack);
+        if (card.getAttribute("style").includes("back.png")) {
+          card.setAttribute("style", this.themes[this.currentTheme].cardBack);
         } else {
           let newSrc = this.themes[this.currentTheme].cardFront;
 
@@ -598,7 +611,7 @@ let concentration = {
 
           newSrc = newSrc.replace("x", cardValue);
 
-          card.setAttribute("src", newSrc);
+          card.setAttribute("style", newSrc);
         }
       }
 
