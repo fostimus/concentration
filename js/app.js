@@ -454,9 +454,11 @@ let concentration = {
   },
 
   generateDeck: function(numberOfPairs) {
+    this.deck = [];
+    this.initialDeck = [];
+
     this.loadCards();
 
-    this.deck = [];
     if (this.initialDeck.length < numberOfPairs) {
       const msg =
         "Error! Not enough cards loaded. Add more to initialDeck. initialDeck size: " +
@@ -595,8 +597,6 @@ let concentration = {
 
           newSrc = newSrc.replace("x", cardValue);
 
-          console.log(newSrc);
-
           card.setAttribute("src", newSrc);
         }
       }
@@ -605,7 +605,7 @@ let concentration = {
     }
   },
   log: function(deck) {
-    if (deck === null) {
+    if (deck === undefined) {
       deck = this.deck;
     }
 
