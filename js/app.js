@@ -63,6 +63,9 @@ const appendToCardContainer = deck => {
   if (sixcol !== null) {
     document.querySelector(".main").classList.add(sixcol);
   }
+
+  let root = document.documentElement;
+  root.style.setProperty("--main-flex", "flex");
 };
 
 const toggleImgSrc = card => {
