@@ -70,12 +70,16 @@ const appendToCardContainer = deck => {
 
 const toggleImgSrc = card => {
   if (card.getAttribute("src").includes("card")) {
-    card.setAttribute("src", "./images/back.png");
-  } else {
     card.setAttribute(
       "src",
-      "./images/card" + card.getAttribute("value") + ".png"
+      concentration.themes[concentration.currentTheme].cardBack
     );
+  } else {
+    let cardSrc = concentration.themes[concentration.currentTheme].cardFront;
+
+    cardSrc = cardSrc.replace("x", card.getAttribute("value"));
+
+    card.setAttribute("src", cardSrc);
   }
 };
 
@@ -194,6 +198,7 @@ startBtn.addEventListener("click", () => {
   //start button only pressed once at the beginning of the game --> reset the game object
   concentration.resetGame();
 
+  // deal new deck
   concentration.gameStarted = true;
   startBtn.disabled = true;
   concentration.deal();
@@ -303,11 +308,18 @@ const attachCardClickListeners = (card, concentration) => {
       const selectedCard1 = concentration.selectedCards[0];
       const selectedCard2 = concentration.selectedCards[1];
 
+      //set up values to use to permanently keep card up
       const val1 = selectedCard1.getAttribute("value");
       const val2 = selectedCard2.getAttribute("value");
+
+      let cardSrc = concentration.themes[concentration.currentTheme].cardFront;
+
+      const card1Src = cardSrc.replace("x", val1);
+      const card2Src = cardSrc.replace("x", val2);
+
       //permanently keep it face up
-      selectedCard1.setAttribute("src", "./images/card" + val1 + ".png");
-      selectedCard2.setAttribute("src", "./images/card" + val2 + ".png");
+      selectedCard1.setAttribute("src", card1Src);
+      selectedCard2.setAttribute("src", card2Src);
 
       //add card to complete deck
       if (!concentration.completeDeck.includes(selectedCard1)) {
@@ -427,7 +439,7 @@ let concentration = {
     // TODO: going to need more cards. MAX pairs at the moment: 13
     for (let i = 2; i < 15; i++) {
       const card = document.createElement("img");
-      card.setAttribute("src", "./images/back.png");
+      card.setAttribute("src", this.themes[this.currentTheme].cardBack);
 
       // TODO: nice to have stretch goal: hash value to hide value
       card.setAttribute("value", i);
@@ -437,6 +449,8 @@ let concentration = {
   },
 
   generateDeck: function(numberOfPairs) {
+    this.loadCards();
+
     this.deck = [];
     if (this.initialDeck.length < numberOfPairs) {
       const msg =
@@ -558,6 +572,27 @@ let concentration = {
         this.themes[this.currentTheme].btnBorderColor
       );
       root.style.setProperty("--font", this.themes[this.currentTheme].font);
+
+      // change card images
+      // contains back? change to appropriate themed img also has back
+
+      for (const card of this.deck) {
+        if (card.getAttribute("src").includes("back")) {
+          card.setAttribute("src", this.themes[this.currentTheme].cardBack);
+        } else {
+          let newSrc = this.themes[this.currentTheme].cardFront;
+
+          const cardValue = card.getAttribute("value");
+
+          newSrc = newSrc.replace("x", cardValue);
+
+          console.log(newSrc);
+
+          card.setAttribute("src", newSrc);
+        }
+      }
+
+      // doesn't contain back? change to appropriate number card
     }
   },
   log: function(deck) {
@@ -574,6 +609,3 @@ let concentration = {
     }
   }
 };
-
-// load cards into JS
-concentration.loadCards();

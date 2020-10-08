@@ -8,9 +8,11 @@ const themes = [
     btnBgColor: "#9882ac",
     btnHoverColor: "#ebebeb",
     btnBorderColor: "#ebebeb",
-    font: '"Junge", sans-serif'
+    font: '"Junge", sans-serif',
+    cardBack: "./images/base-theme/back.png",
+    cardFront: "./images/base-theme/cardx.png"
   },
-  //theme 2
+  //theme 2: lakers
   {
     bgColor: "#B0C0BC",
     textColor: "#797270",
@@ -19,7 +21,9 @@ const themes = [
     btnBgColor: "#C1EDCC",
     btnHoverColor: "#797270",
     btnBorderColor: "#453F3C",
-    font: '"Junge", sans-serif'
+    font: '"Junge", sans-serif',
+    cardBack: "./images/lakers-theme/purple-back.png",
+    cardFront: "./images/lakers-theme/cardx.png"
   },
   //theme 3
   {
@@ -30,7 +34,9 @@ const themes = [
     btnBgColor: "#C1EDCC",
     btnHoverColor: "#797270",
     btnBorderColor: "#453F3C",
-    font: '"Junge", sans-serif'
+    font: '"Junge", sans-serif',
+    cardBack: "./images/base-theme/back.png",
+    cardFront: "./images/base-theme/cardx.png"
   },
   //theme 4
   {
@@ -41,7 +47,9 @@ const themes = [
     btnBgColor: "#1C3144",
     btnHoverColor: "#A2AEBB",
     btnBorderColor: "#1C3144",
-    font: '"Junge", sans-serif'
+    font: '"Junge", sans-serif',
+    cardBack: "./images/base-theme/back.png",
+    cardFront: "./images/base-theme/cardx.png"
   },
   //theme 5
   {
@@ -52,6 +60,8 @@ const themes = [
     btnBgColor: "#9882ac",
     btnHoverColor: "#ebebeb",
     btnBorderColor: "#ebebeb",
-    font: '"Junge", sans-serif'
+    font: '"Junge", sans-serif',
+    cardBack: "./images/base-theme/back.png",
+    cardFront: "./images/base-theme/cardx.png"
   }
 ];
