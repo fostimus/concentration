@@ -603,7 +603,12 @@ let concentration = {
 
       for (const card of this.deck) {
         if (card.getAttribute("style").includes("back.png")) {
-          card.setAttribute("style", this.themes[this.currentTheme].cardBack);
+          card.setAttribute(
+            "style",
+            'background: no-repeat url("' +
+              this.themes[this.currentTheme].cardBack +
+              '");'
+          );
         } else {
           let newSrc = this.themes[this.currentTheme].cardFront;
 
@@ -611,7 +616,10 @@ let concentration = {
 
           newSrc = newSrc.replace("x", cardValue);
 
-          card.setAttribute("style", newSrc);
+          card.setAttribute(
+            "style",
+            'background: no-repeat url("' + newSrc + '");'
+          );
         }
       }
 
