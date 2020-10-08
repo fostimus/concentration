@@ -180,13 +180,6 @@ startBtn.addEventListener("click", () => {
     //remove parent, used for positioning
     modal.parentElement.remove();
   }
-  // if (roundWinModal) {
-  //   roundWinModal.remove();
-  // }
-  // const roundWinModal = document.querySelector(".round-win-parent");
-  // if (roundWinModal) {
-  //   roundWinModal.remove();
-  // }
 
   //start button only pressed once at the beginning of the game --> reset the game object
   concentration.resetGame();
@@ -206,12 +199,13 @@ startBtn.addEventListener("click", () => {
 
         startBtn.disabled = false;
         //round lost, go back to round 1
+        // unhappy face hex code #128542
         const roundWinModal = createModal(
           "round-win-parent",
           null,
           createModal(
             ["lose", "modal"],
-            "Time ran out U+1F614. Back to Round 1.",
+            "Time ran out :(. Back to Round 1.",
             startBtn
           )
         );
