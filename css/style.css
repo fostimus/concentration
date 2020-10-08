@@ -136,8 +136,14 @@ button:disabled {
   min-height: 25px;
 }
 
-.buttons {
+.buttons,
+.theme-btns {
   gap: 15px;
+}
+
+.theme-btns {
+  display: flex;
+  justify-content: center;
 }
 
 .start-btn {
@@ -145,7 +151,9 @@ button:disabled {
   height: 25px;
 }
 
-.theme-btn {
+.next-theme,
+.randomize-theme {
+  margin: 0;
   font-size: 14px;
 }
 
@@ -169,7 +177,7 @@ button:disabled {
 }
 
 @media (min-width: 900px) {
-  .theme-btn {
+  .theme-btns {
     position: absolute;
     top: 0;
     right: 0;

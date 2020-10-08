@@ -162,9 +162,14 @@ const copyCard = (card, concentration) => {
 /**
  * buttons and click listeners
  */
-const themeBtn = document.querySelector(".theme-btn");
-themeBtn.addEventListener("click", () => {
+const nextThemeBtn = document.querySelector(".next-theme");
+nextThemeBtn.addEventListener("click", () => {
   concentration.toggleTheme(false);
+});
+
+const randomizeThemeBtn = document.querySelector(".randomize-theme");
+randomizeThemeBtn.addEventListener("click", () => {
+  concentration.toggleTheme(true);
 });
 
 let pauseTimer = false;
