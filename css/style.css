@@ -52,6 +52,10 @@
   margin: 0 auto;
 }
 
+.card {
+  border-radius: 15px;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;

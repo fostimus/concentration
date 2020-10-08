@@ -448,6 +448,7 @@ let concentration = {
 
       // TODO: nice to have stretch goal: hash value to hide value
       card.setAttribute("value", i);
+      card.classList.add("card");
 
       this.initialDeck.push(card);
     }
