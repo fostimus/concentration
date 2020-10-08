@@ -11,6 +11,7 @@
   --modal-bg-color: #426a5a;
   --modal-border-color: #582b11;
   --btn-bg-color: #9882ac;
+  --btn-text-color: #ebebeb;
   --btn-hover-color: #ebebeb;
   --btn-border-color: #ebebeb;
   --font: "Junge", sans-serif;
@@ -127,7 +128,7 @@ button:hover {
 button,
 button:disabled {
   background-color: var(--btn-bg-color);
-  color: var(--text-color);
+  color: var(--btn-text-color);
   font-size: 20px;
   border-radius: 10px;
   border: 1px solid var(--btn-border-color);

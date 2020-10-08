@@ -569,6 +569,10 @@ let concentration = {
         this.themes[this.currentTheme].btnBgColor
       );
       root.style.setProperty(
+        "--btn-text-color",
+        this.themes[this.currentTheme].btnTextColor
+      );
+      root.style.setProperty(
         "--btn-hover-color",
         this.themes[this.currentTheme].btnHoverColor
       );
