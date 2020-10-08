@@ -73,7 +73,8 @@
   border: 2px solid #582b11;
 }
 
-.round-win {
+.round-win,
+.lose {
   z-index: 1;
   width: 45%;
   height: 20%;

@@ -174,6 +174,12 @@ nextRoundBtn.addEventListener("click", () => {
 const startBtn = document.querySelector(".start-btn");
 
 startBtn.addEventListener("click", () => {
+  // remove modal from screen
+  const modal = document.querySelector(".round-win-parent");
+  if (modal) {
+    modal.remove();
+  }
+
   concentration.gameStarted = true;
   startBtn.disabled = true;
   concentration.deal();
@@ -186,8 +192,26 @@ startBtn.addEventListener("click", () => {
       if (concentration.rounds[concentration.currentRound - 1].timeLeft === 0) {
         timerDiv.textContent = "------";
         clearInterval(timer);
+        // reset valunes in concentration
+        concentration.rounds[concentration.currentRound - 1].timeLeft =
+          concentration.rounds[concentration.currentRound - 1].originalTimeLeft;
         concentration.currentRound = 1;
+        concentration.clearSelected();
+        concentration.completeDeck = [];
+
         startBtn.disabled = false;
+        //round lost, go back to round 1
+        const roundWinModal = createModal(
+          "round-win-parent",
+          null,
+          createModal(
+            ["lose", "modal"],
+            "Time ran out U+1F614. Back to Round 1.",
+            startBtn
+          )
+        );
+
+        document.querySelector(".game-play").appendChild(roundWinModal);
       }
       // if the round is completed, pause the timer, clear the completed deck, and enable the next round button
       else if (concentration.rounds[concentration.currentRound - 1].completed) {
@@ -430,24 +454,28 @@ let concentration = {
     {
       number: 1,
       pairs: 3,
+      originalTimeLeft: 20,
       timeLeft: 20,
       completed: false
     },
     {
       number: 2,
       pairs: 6,
+      originalTimeLeft: 40,
       timeLeft: 40,
       completed: false
     },
     {
       number: 3,
       pairs: 9,
+      originalTimeLeft: 60,
       timeLeft: 60,
       completed: false
     },
     {
       number: 4,
       pairs: 12,
+      originalTimeLeft: 80,
       timeLeft: 80,
       completed: false
     }
@@ -455,7 +483,8 @@ let concentration = {
     // {
     //   number: 5,
     //   pairs: 15,
-    //   timeLeft: 60,
+    // originalTimeLeft: 100,
+    //   timeLeft: 100,
     //   completed: false
     // }
   ],
