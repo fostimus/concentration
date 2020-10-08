@@ -20,9 +20,9 @@ Personally, I wanted to focus on CSS and using Flexbox to lay out the game board
 
 ## Future Development
 
--   refactor to further adhere to object oriented programming principles; ideally I'd like to replace all methods with `concentration.` that exist outside the concentration object, with `this.` and move it within the concentration object.
--   allow user to customize game details, such as:
-    -   game timer
-    -   click timer
-    -   amount of cards on the board
--   allow user to customize/choose theme
+- refactor to further adhere to object oriented programming principles; ideally I'd like to replace all methods with `concentration.` that exist outside the concentration object, with `this.` and move it within the concentration object. The way it's written, this game only works because there is only ONE concentration object
+- allow user to customize game details, such as:
+  - game timer
+  - click timer
+  - amount of cards on the board
+- allow user to customize/choose theme

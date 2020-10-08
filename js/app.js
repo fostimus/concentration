@@ -603,23 +603,12 @@ let concentration = {
 
       for (const card of this.deck) {
         if (card.getAttribute("style").includes("back.png")) {
-          card.setAttribute(
-            "style",
-            'background: no-repeat url("' +
-              this.themes[this.currentTheme].cardBack +
-              '");'
-          );
+          setStyle(card, this.themes[this.currentTheme].cardBack);
         } else {
-          let newSrc = this.themes[this.currentTheme].cardFront;
+          const newSrc = interpolateFront(card.getAttribute("value"));
 
-          const cardValue = card.getAttribute("value");
-
-          newSrc = newSrc.replace("x", cardValue);
-
-          card.setAttribute(
-            "style",
-            'background: no-repeat url("' + newSrc + '");'
-          );
+          console.log(newSrc);
+          setStyle(card, newSrc);
         }
       }
 
@@ -639,4 +628,14 @@ let concentration = {
       );
     }
   }
+};
+
+const interpolateFront = imgValue => {
+  let newSrc = concentration.themes[concentration.currentTheme].cardFront;
+
+  return newSrc.replace("x", imgValue);
+};
+
+const setStyle = (card, style) => {
+  card.setAttribute("style", 'background: no-repeat url("' + style + '");');
 };
