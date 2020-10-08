@@ -174,11 +174,22 @@ nextRoundBtn.addEventListener("click", () => {
 const startBtn = document.querySelector(".start-btn");
 
 startBtn.addEventListener("click", () => {
-  // remove modal from screen
-  const modal = document.querySelector(".round-win-parent");
-  if (modal) {
-    modal.remove();
+  // remove any modals from screen
+  const modals = document.querySelectorAll(".modal");
+  for (const modal of modals) {
+    //remove parent, used for positioning
+    modal.parentElement.remove();
   }
+  // if (roundWinModal) {
+  //   roundWinModal.remove();
+  // }
+  // const roundWinModal = document.querySelector(".round-win-parent");
+  // if (roundWinModal) {
+  //   roundWinModal.remove();
+  // }
+
+  //start button only pressed once at the beginning of the game --> reset the game object
+  concentration.resetGame();
 
   concentration.gameStarted = true;
   startBtn.disabled = true;
@@ -192,12 +203,6 @@ startBtn.addEventListener("click", () => {
       if (concentration.rounds[concentration.currentRound - 1].timeLeft === 0) {
         timerDiv.textContent = "------";
         clearInterval(timer);
-        // reset valunes in concentration
-        concentration.rounds[concentration.currentRound - 1].timeLeft =
-          concentration.rounds[concentration.currentRound - 1].originalTimeLeft;
-        concentration.currentRound = 1;
-        concentration.clearSelected();
-        concentration.completeDeck = [];
 
         startBtn.disabled = false;
         //round lost, go back to round 1
@@ -313,11 +318,16 @@ const attachCardClickListeners = (card, concentration) => {
       if (concentration.completeDeck.length === concentration.deck.length) {
         // if the current round is the same as the length as the round array, the game is over
         if (concentration.currentRound === concentration.rounds.length) {
+          startBtn.disabled = false;
           //append end modal
           const endModal = createModal(
             "end-modal-parent",
             null,
-            createModal(["end", "modal"], "YOU BEAT THE GAME!", null)
+            createModal(
+              ["end", "modal"],
+              "YOU BEAT THE GAME! Play again?",
+              startBtn
+            )
           );
 
           document.querySelector(".main").appendChild(endModal);
@@ -457,28 +467,29 @@ let concentration = {
       originalTimeLeft: 20,
       timeLeft: 20,
       completed: false
-    },
-    {
-      number: 2,
-      pairs: 6,
-      originalTimeLeft: 40,
-      timeLeft: 40,
-      completed: false
-    },
-    {
-      number: 3,
-      pairs: 9,
-      originalTimeLeft: 60,
-      timeLeft: 60,
-      completed: false
-    },
-    {
-      number: 4,
-      pairs: 12,
-      originalTimeLeft: 80,
-      timeLeft: 80,
-      completed: false
     }
+    // ,
+    // {
+    //   number: 2,
+    //   pairs: 6,
+    //   originalTimeLeft: 40,
+    //   timeLeft: 40,
+    //   completed: false
+    // },
+    // {
+    //   number: 3,
+    //   pairs: 9,
+    //   originalTimeLeft: 60,
+    //   timeLeft: 60,
+    //   completed: false
+    // },
+    // {
+    //   number: 4,
+    //   pairs: 12,
+    //   originalTimeLeft: 80,
+    //   timeLeft: 80,
+    //   completed: false
+    // }
     // ,
     // {
     //   number: 5,
@@ -488,6 +499,14 @@ let concentration = {
     //   completed: false
     // }
   ],
+  resetGame: function() {
+    this.completeDeck = [];
+    for (const round of this.rounds) {
+      round.timeLeft = round.originalTimeLeft;
+      round.completed = false;
+    }
+    this.currentRound = 1;
+  },
   log: function(deck) {
     if (deck === null) {
       deck = this.deck;
