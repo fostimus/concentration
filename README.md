@@ -39,10 +39,13 @@ All images are from Wikipedia or provided by GA through the program. I had a bre
 
 ## Future Development
 
-- Refactor to further adhere to object oriented programming principles; ideally I'd like to replace all methods with `concentration.` that exist outside the concentration object, with `this.` and move it within the concentration object. The way it's written, this game only works because there is only ONE concentration object
-- Allow user to customize game details, such as:
-  - Game timer
-  - Click timer
-  - Amount of cards on the board
-- Allow user to customize/choose theme
-- Favicon
+-   Refactor to further adhere to object oriented programming principles; ideally I'd like to replace all methods with `concentration.` that exist outside the concentration object, with `this.` and move it within the concentration object. The way it's written, this game only works because there is only ONE concentration object
+-   Allow user to customize game details, such as:
+    -   Game timer
+    -   Click timer
+    -   Amount of cards on the board
+-   Allow user to customize/choose theme
+-   Favicon
+-   Update lose modal with "shame" gif (to rhyme with game and fame)
+-   Update last couple themes
+-   Add CSS animations
