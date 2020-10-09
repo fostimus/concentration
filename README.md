@@ -14,15 +14,20 @@ Personally, I wanted to focus on CSS and using Flexbox to lay out the game board
 
 ## User Stories & Wireframes
 
+Lost my screenshots :(
+
 ## Technologies & Code Snippets
 
 ## Credits
 
+All images are from Wikipedia or provided by GA through the program. I had a breakthrough in my understanding of client side JS, thanks to [this StackOverflow post and answer](https://stackoverflow.com/questions/22125865/wait-until-flag-true)
+
 ## Future Development
 
-- refactor to further adhere to object oriented programming principles; ideally I'd like to replace all methods with `concentration.` that exist outside the concentration object, with `this.` and move it within the concentration object. The way it's written, this game only works because there is only ONE concentration object
-- allow user to customize game details, such as:
-  - game timer
-  - click timer
-  - amount of cards on the board
-- allow user to customize/choose theme
+-   refactor to further adhere to object oriented programming principles; ideally I'd like to replace all methods with `concentration.` that exist outside the concentration object, with `this.` and move it within the concentration object. The way it's written, this game only works because there is only ONE concentration object
+-   allow user to customize game details, such as:
+    -   game timer
+    -   click timer
+    -   amount of cards on the board
+-   allow user to customize/choose theme
+-   favicon
