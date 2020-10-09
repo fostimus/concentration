@@ -207,6 +207,12 @@ button:disabled {
   }
 }
 
+@media (max-width: 520px) {
+  .row {
+    flex-direction: column;
+  }
+}
+
 @media (min-width: 900px) {
   .theme-btns {
     position: absolute;
