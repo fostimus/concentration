@@ -1,5 +1,3 @@
-// note: the theme functionality requires `themes.js` to be loaded before this file
-
 /*
  * DOM Manipulation
  */
@@ -70,18 +68,16 @@ const appendToCardContainer = deck => {
 
 const toggleImgSrc = card => {
   if (card.getAttribute("style").includes("card")) {
-    card.setAttribute(
-      "style",
-      'background: no-repeat url("' +
-        concentration.themes[concentration.currentTheme].cardBack +
-        '");'
-    );
+    const style =
+      concentration.themes && concentration.themes.length > 0
+        ? concentration.themes[concentration.currentTheme].cardBack
+        : "./images/base-theme/back.png";
+
+    setStyle(card, style);
   } else {
-    let cardSrc = concentration.themes[concentration.currentTheme].cardFront;
+    const cardSrc = interpolateFront(card.getAttribute("value"));
 
-    cardSrc = cardSrc.replace("x", card.getAttribute("value"));
-
-    card.setAttribute("style", 'background: no-repeat url("' + cardSrc + '");');
+    setStyle(card, cardSrc);
   }
 };
 
@@ -159,6 +155,26 @@ const copyCard = (card, concentration) => {
   cardHolder.push(attachCardClickListeners(cloneCard, concentration));
 
   return cardHolder;
+};
+
+const interpolateFront = imgValue => {
+  let newSrc =
+    concentration.themes && concentration.themes > 0
+      ? concentration.themes[concentration.currentTheme].cardFront
+      : "./images/base-theme/cardx.png";
+
+  return newSrc.replace("x", imgValue);
+};
+
+const setStyle = (card, style) => {
+  card.setAttribute("style", 'background: no-repeat url("' + style + '");');
+};
+
+const initializeThemes = themesArray => {
+  if (themesArray) {
+    return themesArray;
+  }
+  return [];
 };
 
 /**
@@ -316,23 +332,12 @@ const attachCardClickListeners = (card, concentration) => {
       const selectedCard2 = concentration.selectedCards[1];
 
       //set up values to use to permanently keep card up
-      const val1 = selectedCard1.getAttribute("value");
-      const val2 = selectedCard2.getAttribute("value");
-
-      let cardSrc = concentration.themes[concentration.currentTheme].cardFront;
-
-      const card1Src = cardSrc.replace("x", val1);
-      const card2Src = cardSrc.replace("x", val2);
+      const card1Src = interpolateFront(selectedCard1.getAttribute("value"));
+      const card2Src = interpolateFront(selectedCard2.getAttribute("value"));
 
       //permanently keep it face up
-      selectedCard1.setAttribute(
-        "style",
-        'background: no-repeat url("' + card1Src + '");'
-      );
-      selectedCard2.setAttribute(
-        "style",
-        'background: no-repeat url("' + card2Src + '");'
-      );
+      interpolateFront(selectedCard1, card1Src);
+      interpolateFront(selectedCard2, card2Src);
 
       //add card to complete deck
       if (!concentration.completeDeck.includes(selectedCard1)) {
@@ -404,6 +409,7 @@ let concentration = {
 
   currentTheme: 0,
 
+  // note: the theme functionality requires `themes.js` to be loaded before this file
   themes: themes,
 
   currentRound: 1,
@@ -452,12 +458,11 @@ let concentration = {
     // TODO: going to need more cards. MAX pairs at the moment: 13
     for (let i = 2; i < 15; i++) {
       const card = document.createElement("div");
-      card.setAttribute(
-        "style",
-        'background: no-repeat url("' +
-          this.themes[this.currentTheme].cardBack +
-          '");'
-      );
+      if (this.themes && this.themes.length > 0) {
+        setStyle(card, this.themes[this.currentTheme].cardBack);
+      } else {
+        setStyle(card, "./images/base-theme/back.png");
+      }
 
       // TODO: nice to have stretch goal: hash value to hide value
       card.setAttribute("value", i);
@@ -552,7 +557,7 @@ let concentration = {
     this.currentRound = 1;
   },
   toggleTheme: function(randomize) {
-    if (this.themes) {
+    if (this.themes && this.themes.length > 0) {
       let root = document.documentElement;
       //randomly select theme
       if (randomize) {
@@ -611,8 +616,6 @@ let concentration = {
           setStyle(card, newSrc);
         }
       }
-
-      // doesn't contain back? change to appropriate number card
     }
   },
   log: function(deck) {
@@ -628,14 +631,4 @@ let concentration = {
       );
     }
   }
-};
-
-const interpolateFront = imgValue => {
-  let newSrc = concentration.themes[concentration.currentTheme].cardFront;
-
-  return newSrc.replace("x", imgValue);
-};
-
-const setStyle = (card, style) => {
-  card.setAttribute("style", 'background: no-repeat url("' + style + '");');
 };
