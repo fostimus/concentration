@@ -1,17 +1,18 @@
 const themes = [
-  //theme 1
+  //theme 1: emoji
   {
-    bgColor: "#1c0f13",
-    textColor: "#ebebeb",
-    modalBgColor: "#426a5a",
-    modalBorderColor: "#582b11",
-    btnBgColor: "#9882ac",
-    btnTextColor: "#ebebeb",
-    btnHoverColor: "#ebebeb",
-    btnBorderColor: "#ebebeb",
-    font: '"Junge", sans-serif',
-    cardBack: "./images/base-theme/back.png",
-    cardFront: "./images/base-theme/cardx.png"
+    bgColor: "#FFB17A",
+    textColor: "#191D32",
+    modalBgColor: "#FFB17A",
+    modalBorderColor: "#5C80BC",
+    modalTextColor: "#191D32",
+    btnBgColor: "#B7B5E4",
+    btnTextColor: "#191D32",
+    btnHoverColor: "#C1EDCC",
+    btnBorderColor: "#C1EDCC",
+    font: '"Chewy", sans-serif',
+    cardBack: "./images/emoji-theme/back.png",
+    cardFront: "./images/emoji-theme/cardx.png"
   },
   //theme 2: lakers
   {
@@ -19,48 +20,53 @@ const themes = [
     textColor: "#FFBA08",
     modalBgColor: "#FFFFFF",
     modalBorderColor: "#000000",
+    modalTextColor: "#545677",
     btnBgColor: "#FFBA08",
     btnTextColor: "#000000",
     btnHoverColor: "#6E2594",
     btnBorderColor: "#000000",
-    font: '"Junge", sans-serif',
+    font: '"BebasNeue", sans-serif',
     cardBack: "./images/lakers-theme/purple-back.png",
     cardFront: "./images/lakers-theme/cardx.png"
   },
-  //theme 3
+
+  //theme 3: numbers
   {
-    bgColor: "#B0C0BC",
-    textColor: "#797270",
-    modalBgColor: "#453F3C",
-    modalBorderColor: "#C1EDCC",
-    btnBgColor: "#C1EDCC",
-    btnTextColor: "#ebebeb",
-    btnHoverColor: "#797270",
-    btnBorderColor: "#453F3C",
-    font: '"Junge", sans-serif',
-    cardBack: "./images/base-theme/back.png",
-    cardFront: "./images/base-theme/cardx.png"
+    bgColor: "#6E9075",
+    textColor: "#36413E",
+    modalBgColor: "#3581B8",
+    modalBorderColor: "#F3F9E3",
+    modalTextColor: "#F3F9E3",
+    btnBgColor: "#F3F9E3",
+    btnTextColor: "#1A281F",
+    btnHoverColor: "#36413E",
+    btnBorderColor: "#36413E",
+    font: '"FjallaOne", sans-serif',
+    cardBack: "./images/numbers-theme/back.png",
+    cardFront: "./images/numbers-theme/cardx.png"
   },
   //theme 4
   {
-    bgColor: "#D00000",
-    textColor: "#A2AEBB",
-    modalBgColor: "#3F88C5",
-    modalBorderColor: "#FFBA08",
-    btnBgColor: "#1C3144",
-    btnTextColor: "#ebebeb",
-    btnHoverColor: "#A2AEBB",
-    btnBorderColor: "#1C3144",
+    bgColor: "#FECEE9",
+    textColor: "#011C27",
+    modalBgColor: "#545677",
+    modalBorderColor: "#545677",
+    modalTextColor: "#EB9FEF",
+    btnBgColor: "#03254E",
+    btnTextColor: "#EB9FEF",
+    btnHoverColor: "#545677",
+    btnBorderColor: "#03254E",
     font: '"Junge", sans-serif',
     cardBack: "./images/base-theme/back.png",
     cardFront: "./images/base-theme/cardx.png"
   },
-  //theme 5
+  //theme 5: original
   {
     bgColor: "#1c0f13",
     textColor: "#ebebeb",
     modalBgColor: "#426a5a",
     modalBorderColor: "#582b11",
+    modalTextColor: "#ebebeb",
     btnBgColor: "#9882ac",
     btnTextColor: "#ebebeb",
     btnHoverColor: "#ebebeb",

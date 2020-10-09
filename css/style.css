@@ -3,17 +3,33 @@
   src: url("../font/Junge-Regular.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "BebasNeue";
+  src: url("../font/BebasNeue-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "FjallaOne";
+  src: url("../font/FjallaOne-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Chewy";
+  src: url("../font/Chewy-Regular.ttf") format("truetype");
+}
+
 :root {
   --main-flex: null;
   /* theme 1 */
-  --bg-color: #1c0f13;
-  --text-color: #ebebeb;
-  --modal-bg-color: #426a5a;
-  --modal-border-color: #582b11;
-  --btn-bg-color: #9882ac;
-  --btn-text-color: #ebebeb;
-  --btn-hover-color: #ebebeb;
-  --btn-border-color: #ebebeb;
+  --bg-color: #ffb17a;
+  --text-color: #191d32;
+  --modal-bg-color: #ffb17a;
+  --modal-border-color: #5c80bc;
+  --modal-text-color: #191d32;
+  --btn-bg-color: #b7b5e4;
+  --btn-text-color: #191d32;
+  --btn-hover-color: #c1edcc;
+  --btn-border-color: #c1edcc;
   --font: "Junge", sans-serif;
 }
 
@@ -41,7 +57,6 @@
 
 .game-play {
   position: relative;
-  gap: 40px;
 }
 
 .card-container {
@@ -67,9 +82,9 @@
 }
 
 .logistics {
-  margin-top: 50px;
+  margin-top: 24px;
   justify-content: center;
-  gap: 50px;
+  gap: 25px;
 }
 
 .round-win-parent,
@@ -82,6 +97,7 @@
 
 .modal {
   background-color: var(--modal-bg-color);
+  color: var(--modal-text-color);
   justify-content: space-evenly;
   align-items: center;
   align-self: center;
@@ -96,7 +112,7 @@
   width: 45%;
   height: 20%;
   max-width: 450px;
-  max-height: 200px;
+  min-height: 200px;
   font-size: 25px;
 }
 

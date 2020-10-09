@@ -232,7 +232,7 @@ startBtn.addEventListener("click", () => {
 
       // if a round expires, clear the timer, set the round to 1, and enable the start button
       if (concentration.rounds[concentration.currentRound - 1].timeLeft === 0) {
-        timerDiv.textContent = "------";
+        timerDiv.textContent = "";
         clearInterval(timer);
 
         startBtn.disabled = false;
@@ -563,9 +563,7 @@ let concentration = {
       if (randomize) {
         this.currentTheme = Math.floor(Math.random() * this.themes.length);
       } else {
-        console.log(this.currentTheme);
         this.currentTheme++;
-        console.log(this.currentTheme);
         if (this.currentTheme === this.themes.length) {
           this.currentTheme = 0;
         }
@@ -582,6 +580,10 @@ let concentration = {
       root.style.setProperty(
         "--modal-bg-color",
         this.themes[this.currentTheme].modalBgColor
+      );
+      root.style.setProperty(
+        "--modal-text-color",
+        this.themes[this.currentTheme].modalTextColor
       );
       root.style.setProperty(
         "--modal-border-color",
@@ -610,12 +612,10 @@ let concentration = {
 
       for (const card of this.deck) {
         if (card.getAttribute("style").includes("back.png")) {
-          console.log(this.currentTheme);
           setStyle(card, this.themes[this.currentTheme].cardBack);
         } else {
           const newSrc = interpolateFront(card.getAttribute("value"));
 
-          console.log(newSrc);
           setStyle(card, newSrc);
         }
       }
