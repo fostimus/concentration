@@ -632,3 +632,12 @@ let concentration = {
     }
   }
 };
+
+if (!concentration.themes) {
+  nextThemeBtn.disabled = true;
+  randomizeThemeBtn.disabled = true;
+}
+if (concentration.themes <= 0) {
+  nextThemeBtn.disabled = true;
+  randomizeThemeBtn.disabled = true;
+}
