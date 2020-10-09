@@ -237,13 +237,12 @@ startBtn.addEventListener("click", () => {
 
         startBtn.disabled = false;
         //round lost, go back to round 1
-        // unhappy face hex code #128542
         const roundWinModal = createModal(
           "round-win-parent",
           null,
           createModal(
             ["lose", "modal"],
-            "Time ran out :(. Back to Round 1.",
+            "Time ran out 😞. Back to Round 1.",
             startBtn
           )
         );
