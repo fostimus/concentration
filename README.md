@@ -48,4 +48,5 @@ All images are from Wikipedia or provided by GA through the program. I had a bre
 -   Favicon
 -   Update lose modal with "shame" gif (to rhyme with game and fame)
 -   Update last couple themes
--   Add CSS animations
+-   Add CSS animations - especially when the card is flipped
+-   Add in sounds - especially when the card is flipped
