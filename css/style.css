@@ -31,6 +31,8 @@
   --btn-hover-color: #c1edcc;
   --btn-border-color: #c1edcc;
   --font: "Chewy", sans-serif;
+
+  --main-transition-duration: 1s;
 }
 
 /**
@@ -71,7 +73,7 @@
   width: 120px;
   height: 170px;
   border-radius: 15px;
-  transition: background 0.35s ease-in 0s;
+  transition: background 0.5s ease-in 0s;
 }
 
 .row {
@@ -104,6 +106,7 @@
   border-radius: 20px;
   border: 2px solid var(--modal-border-color);
   text-align: center;
+  transition: all var(--main-transition-duration);
 }
 
 .round-win,
@@ -140,12 +143,15 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-family: var(--font);
-  font-size: 18px;
+  font: 18px var(--font);
+  transition: all var(--main-transition-duration);
 }
 
 button:hover {
   background-color: var(--btn-hover-color);
+  max-width: 300px;
+  height: 50px;
+  font-size: 25px;
 }
 
 button,
@@ -158,6 +164,7 @@ button:disabled {
   margin: 0 auto;
   max-width: 150px;
   min-height: 25px;
+  transition: all 1s;
 }
 
 .buttons,

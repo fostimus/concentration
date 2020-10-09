@@ -242,7 +242,7 @@ startBtn.addEventListener("click", () => {
           null,
           createModal(
             ["lose", "modal"],
-            "Time ran out 😞. Back to Round 1.",
+            "Time ran out 😞 Back to Round 1.",
             startBtn
           )
         );
