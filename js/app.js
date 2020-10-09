@@ -159,7 +159,7 @@ const copyCard = (card, concentration) => {
 
 const interpolateFront = imgValue => {
   let newSrc =
-    concentration.themes && concentration.themes > 0
+    concentration.themes && concentration.themes.length > 0
       ? concentration.themes[concentration.currentTheme].cardFront
       : "./images/base-theme/cardx.png";
 
@@ -563,7 +563,9 @@ let concentration = {
       if (randomize) {
         this.currentTheme = Math.floor(Math.random() * this.themes.length);
       } else {
+        console.log(this.currentTheme);
         this.currentTheme++;
+        console.log(this.currentTheme);
         if (this.currentTheme === this.themes.length) {
           this.currentTheme = 0;
         }
@@ -608,6 +610,7 @@ let concentration = {
 
       for (const card of this.deck) {
         if (card.getAttribute("style").includes("back.png")) {
+          console.log(this.currentTheme);
           setStyle(card, this.themes[this.currentTheme].cardBack);
         } else {
           const newSrc = interpolateFront(card.getAttribute("value"));
