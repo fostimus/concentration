@@ -235,19 +235,21 @@ startBtn.addEventListener("click", () => {
         timerDiv.textContent = "";
         clearInterval(timer);
 
+        const shame = document.createElement("img");
+        shame.setAttribute("src", "./images/shame.gif");
+
         startBtn.disabled = false;
         //round lost, go back to round 1
         const roundWinModal = createModal(
           "round-win-parent",
           null,
-          createModal(
-            ["lose", "modal"],
-            "Time ran out 😞 Back to Round 1.",
+          createModal(["lose", "modal"], "Time ran out 😞 Back to Round 1.", [
+            shame,
             startBtn
-          )
+          ])
         );
 
-        document.querySelector(".game-play").appendChild(roundWinModal);
+        document.querySelector(".main").appendChild(roundWinModal);
       }
       // if the round is completed, pause the timer, clear the completed deck, and enable the next round button
       else if (concentration.rounds[concentration.currentRound - 1].completed) {
