@@ -73,7 +73,12 @@
   width: 120px;
   height: 170px;
   border-radius: 15px;
-  transition: background 0.5s ease-in 0s;
+  transform: rotateY(180deg);
+  transition: all 0.75s;
+}
+
+.card-flip {
+  transform: rotateY(360deg);
 }
 
 .row {
@@ -204,6 +209,12 @@ button:disabled {
 @media (max-width: 900px) {
   .main {
     flex-flow: column wrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .row {
+    flex-direction: column;
   }
 }
 
