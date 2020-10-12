@@ -95,7 +95,8 @@
 }
 
 .round-win-parent,
-.end-modal-parent {
+.end-parent,
+.lose-parent {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -117,11 +118,19 @@
 .round-win,
 .lose {
   z-index: 1;
-  width: 45%;
-  height: 20%;
-  max-width: 450px;
-  min-height: 200px;
+  max-width: 1000px;
+  max-height: 1000px;
   font-size: 25px;
+}
+
+.round-win {
+  width: 50%;
+  height: 25%;
+}
+
+.lose {
+  min-height: 400px;
+  padding: 0 20px 0;
 }
 
 .end {
@@ -224,5 +233,11 @@ button:disabled {
     top: 0;
     right: 0;
     margin: 20px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .lose-parent {
+    margin-top: 50px;
   }
 }

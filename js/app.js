@@ -236,21 +236,27 @@ startBtn.addEventListener("click", () => {
         timerDiv.textContent = "";
         clearInterval(timer);
 
+        //shame gif
         const shame = document.createElement("img");
         shame.setAttribute("src", "./images/shame.gif");
 
+        //div to go back to round 1.
+        const round1 = document.createElement("div");
+        round1.textContent = "Back to Round 1.";
+
         startBtn.disabled = false;
         //round lost, go back to round 1
-        const roundWinModal = createModal(
-          "round-win-parent",
+        const loseModal = createModal(
+          "lose-parent",
           null,
-          createModal(["lose", "modal"], "Time ran out 😞 Back to Round 1.", [
+          createModal(["lose", "modal"], "Time ran out 😞 Instead of fame...", [
             shame,
+            round1,
             startBtn
           ])
         );
 
-        document.querySelector(".main").appendChild(roundWinModal);
+        document.querySelector(".game-play").appendChild(loseModal);
       }
       // if the round is completed, pause the timer, clear the completed deck, and enable the next round button
       else if (concentration.rounds[concentration.currentRound - 1].completed) {
@@ -293,7 +299,6 @@ const attachCardClickListeners = (card, concentration) => {
       !concentration.completeDeck.includes(card)
     ) {
       toggleImgSrc(card);
-      console.log(card.classList);
       // only allow the second card chosen that is flipped up to use the timer
       if (
         !card.getAttribute("style").includes("back.png") &&
@@ -361,7 +366,7 @@ const attachCardClickListeners = (card, concentration) => {
           startBtn.disabled = false;
           //append end modal
           const endModal = createModal(
-            "end-modal-parent",
+            "end-parent",
             null,
             createModal(
               ["end", "modal"],
