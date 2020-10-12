@@ -67,6 +67,7 @@ const appendToCardContainer = deck => {
 };
 
 const toggleImgSrc = card => {
+  card.classList.toggle("card-flip");
   if (card.getAttribute("style").includes("card")) {
     const style =
       concentration.themes && concentration.themes.length > 0
@@ -290,6 +291,7 @@ const attachCardClickListeners = (card, concentration) => {
       !concentration.completeDeck.includes(card)
     ) {
       toggleImgSrc(card);
+      console.log(card.classList);
       // only allow the second card chosen that is flipped up to use the timer
       if (
         !card.getAttribute("style").includes("back.png") &&
@@ -301,7 +303,10 @@ const attachCardClickListeners = (card, concentration) => {
           () => {
             if (showCards === 0) {
               clearInterval(timerInterval);
-              concentration.resetChosen();
+              //only reset chosen if the card that TRIGGERED the timeout is not in the complete deck.
+              if (!concentration.completeDeck.includes(card)) {
+                concentration.resetChosen();
+              }
             } else {
               showCards--;
             }
@@ -394,7 +399,7 @@ const attachCardClickListeners = (card, concentration) => {
  */
 let concentration = {
   // turnSpeed is in seconds, takes decimals as well.
-  turnSpeed: 0.2,
+  turnSpeed: 0.6,
 
   selectedCards: [],
 
