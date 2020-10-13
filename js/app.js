@@ -609,13 +609,22 @@ let concentration = {
         this.themes[this.currentTheme].btnTextColor
       );
       root.style.setProperty(
+        "--btn-border-color",
+        this.themes[this.currentTheme].btnBorderColor
+      );
+      root.style.setProperty(
         "--btn-hover-color",
         this.themes[this.currentTheme].btnHoverColor
       );
       root.style.setProperty(
-        "--btn-border-color",
-        this.themes[this.currentTheme].btnBorderColor
+        "--btn-disabled-color",
+        this.themes[this.currentTheme].btnDisabledColor
       );
+      root.style.setProperty(
+        "--btn-disabled-border-color",
+        this.themes[this.currentTheme].btnDisabledBorderColor
+      );
+
       root.style.setProperty("--font", this.themes[this.currentTheme].font);
 
       // change card images

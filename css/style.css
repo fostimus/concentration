@@ -28,8 +28,10 @@
   --modal-text-color: #191d32;
   --btn-bg-color: #b7b5e4;
   --btn-text-color: #191d32;
-  --btn-hover-color: #c1edcc;
   --btn-border-color: #c1edcc;
+  --btn-hover-color: #c1edcc;
+  --btn-disabled-color: #c2c5bb;
+  --btn-disabled-border-color: #c2c5bb;
   --font: "Chewy", sans-serif;
 
   --main-transition-duration: 1s;
@@ -168,8 +170,7 @@ button:hover {
   font-size: 25px;
 }
 
-button,
-button:disabled {
+button {
   background-color: var(--btn-bg-color);
   color: var(--btn-text-color);
   font-size: 20px;
@@ -179,6 +180,12 @@ button:disabled {
   max-width: 150px;
   min-height: 25px;
   transition: all 1s;
+}
+
+button:disabled {
+  pointer-events: none;
+  background-color: var(--btn-disabled-color);
+  border: 1px solid var(--btn-disabled-border-color);
 }
 
 .buttons,
