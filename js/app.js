@@ -406,7 +406,7 @@ const attachCardClickListeners = (card, concentration) => {
  */
 let concentration = {
   // turnSpeed is in seconds, takes decimals as well.
-  turnSpeed: 0.6,
+  turnSpeed: 0.3,
 
   selectedCards: [],
 
