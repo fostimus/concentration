@@ -19,7 +19,9 @@ Personally, I wanted to focus on CSS and using Flexbox to lay out the game board
 
 ## User Stories & Wireframes
 
-Lost my screenshots :(
+![Wireframe 1](./images/wireframes/wireframe-1.png)
+![Wireframe 2](./images/wireframes/wireframe-2.png)
+![Wireframe 3](./images/wireframes/wireframe-3.png)
 
 ## Technologies & Code Snippets
 
@@ -46,7 +48,6 @@ All images are from Wikipedia or provided by GA through the program. I had a bre
     -   Amount of cards on the board
 -   Allow user to customize/choose theme
 -   Favicon
--   Update lose modal with "shame" gif (to rhyme with game and fame)
 -   Update last couple themes
--   Add CSS animations - especially when the card is flipped
 -   Add in sounds - especially when the card is flipped
+-   Add in scoreboard - high scores for quickest time
