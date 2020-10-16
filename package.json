@@ -1,0 +1,20 @@
+{
+  "name": "concentration",
+  "version": "1.0.0",
+  "description": "The classic memory game of \"Concentration\". This solitary game is played by clicking cards that are face down, and trying to find its matching pair; if you successfully match a card, they will stay face up.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fostimus/concentration.git"
+  },
+  "keywords": [],
+  "author": "Derek Foster <derekfoster94@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fostimus/concentration/issues"
+  },
+  "homepage": "https://github.com/fostimus/concentration#readme"
+}
