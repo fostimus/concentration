@@ -15,6 +15,7 @@ app.get("/", function(req, res) {
 
 app.post("/score", function(req, res) {
   res.redirect("/");
+  // find the record with the name; if not, create it
   db.score
     .findOrCreate({
       where: {
@@ -22,7 +23,21 @@ app.post("/score", function(req, res) {
       }
     })
     .then(returnedScore => {
-      console.log(returnedScore);
+      const returnedValues = returnedScore[0].dataValues;
+      // if the score is null or the subitted score (from current play) is bigger than saved score, update record
+      if (!returnedValues.score || req.body.score > returnedValues.score) {
+        console.log("hello");
+        db.score.update(
+          {
+            score: req.body.score
+          },
+          {
+            where: {
+              name: returnedValues.name
+            }
+          }
+        );
+      }
     });
 });
 

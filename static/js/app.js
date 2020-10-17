@@ -456,36 +456,35 @@ let concentration = {
       originalTimeLeft: 20,
       timeLeft: 20,
       completed: false
+    },
+    {
+      number: 2,
+      pairs: 6,
+      originalTimeLeft: 40,
+      timeLeft: 40,
+      completed: false
+    },
+    {
+      number: 3,
+      pairs: 9,
+      originalTimeLeft: 60,
+      timeLeft: 60,
+      completed: false
+    },
+    {
+      number: 4,
+      pairs: 12,
+      originalTimeLeft: 80,
+      timeLeft: 80,
+      completed: false
+    },
+    {
+      number: 5,
+      pairs: 15,
+      originalTimeLeft: 100,
+      timeLeft: 100,
+      completed: false
     }
-    // {
-    //   number: 2,
-    //   pairs: 6,
-    //   originalTimeLeft: 40,
-    //   timeLeft: 40,
-    //   completed: false
-    // }
-    // {
-    //   number: 3,
-    //   pairs: 9,
-    //   originalTimeLeft: 60,
-    //   timeLeft: 60,
-    //   completed: false
-    // },
-    // {
-    //   number: 4,
-    //   pairs: 12,
-    //   originalTimeLeft: 80,
-    //   timeLeft: 80,
-    //   completed: false
-    // }
-    // ,
-    // {
-    //   number: 5,
-    //   pairs: 15,
-    // originalTimeLeft: 100,
-    //   timeLeft: 100,
-    //   completed: false
-    // }
   ],
 
   loadCards: function() {
