@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "fostimus",
+    "password": null,
+    "database": "concentration-scores",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "fostimus",
+    "password": null,
+    "database": "concentration-scores",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "fostimus",
+    "password": null,
+    "database": "concentration-scores",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}

@@ -133,6 +133,7 @@ const createModal = (cssClass, text, children) => {
   if (children !== null) {
     if (Array.isArray(children)) {
       for (const child of children) {
+        console.log(child);
         newModal.appendChild(child);
       }
     } else {
@@ -361,18 +362,44 @@ const attachCardClickListeners = (card, concentration) => {
       concentration.clearSelected();
 
       if (concentration.completeDeck.length === concentration.deck.length) {
+        // round is over, update round object boolean
+        concentration.rounds[concentration.currentRound - 1].completed = true;
         // if the current round is the same as the length as the round array, the game is over
         if (concentration.currentRound === concentration.rounds.length) {
+          const scoreboardForm = document.createElement("form");
+          scoreboardForm.setAttribute("method", "post");
+          scoreboardForm.setAttribute("action", "/score");
+
+          const scoreboardNameInput = document.createElement("input");
+          scoreboardNameInput.setAttribute("type", "text");
+          scoreboardNameInput.setAttribute("name", "name");
+          scoreboardNameInput.setAttribute("placeholder", "Unique Name");
+
+          const scoreboardScoreInput = document.createElement("input");
+          scoreboardScoreInput.setAttribute("type", "hidden");
+          scoreboardScoreInput.setAttribute("name", "score");
+          scoreboardScoreInput.setAttribute(
+            "value",
+            concentration.calculateScore()
+          );
+
+          const scoreboardSubmit = document.createElement("button");
+          scoreboardSubmit.setAttribute("type", "submit");
+          scoreboardSubmit.textContent = "Add Score to Scoreboard";
+
+          scoreboardForm.appendChild(scoreboardNameInput);
+          scoreboardForm.appendChild(scoreboardScoreInput);
+          scoreboardForm.appendChild(scoreboardSubmit);
+
           startBtn.disabled = false;
           //append end modal
           const endModal = createModal(
             "end-parent",
             null,
-            createModal(
-              ["end", "modal"],
-              "YOU BEAT THE GAME! Play again?",
-              startBtn
-            )
+            createModal(["end", "modal"], "YOU BEAT THE GAME! Play again?", [
+              startBtn,
+              scoreboardForm
+            ])
           );
 
           document.querySelector(".main").appendChild(endModal);
@@ -392,9 +419,6 @@ const attachCardClickListeners = (card, concentration) => {
           //insert next round modal
           document.querySelector(".game-play").appendChild(roundWinModal);
         }
-
-        // round is over, update round object boolean
-        concentration.rounds[concentration.currentRound - 1].completed = true;
       }
     }
   });
@@ -432,28 +456,28 @@ let concentration = {
       originalTimeLeft: 20,
       timeLeft: 20,
       completed: false
-    },
-    {
-      number: 2,
-      pairs: 6,
-      originalTimeLeft: 40,
-      timeLeft: 40,
-      completed: false
-    },
-    {
-      number: 3,
-      pairs: 9,
-      originalTimeLeft: 60,
-      timeLeft: 60,
-      completed: false
-    },
-    {
-      number: 4,
-      pairs: 12,
-      originalTimeLeft: 80,
-      timeLeft: 80,
-      completed: false
     }
+    // {
+    //   number: 2,
+    //   pairs: 6,
+    //   originalTimeLeft: 40,
+    //   timeLeft: 40,
+    //   completed: false
+    // }
+    // {
+    //   number: 3,
+    //   pairs: 9,
+    //   originalTimeLeft: 60,
+    //   timeLeft: 60,
+    //   completed: false
+    // },
+    // {
+    //   number: 4,
+    //   pairs: 12,
+    //   originalTimeLeft: 80,
+    //   timeLeft: 80,
+    //   completed: false
+    // }
     // ,
     // {
     //   number: 5,
@@ -640,6 +664,19 @@ let concentration = {
         }
       }
     }
+  },
+  calculateScore: function() {
+    let totalScore = 0;
+    console.log(this.rounds);
+    for (const round of this.rounds) {
+      if (!round.completed) {
+        console.error("Cannot compute score until game is finished");
+      }
+
+      totalScore += round.timeLeft;
+    }
+
+    return totalScore;
   },
   log: function(deck) {
     if (deck === undefined) {
