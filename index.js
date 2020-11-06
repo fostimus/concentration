@@ -16,6 +16,16 @@ app.get("/", function(req, res) {
   res.render("index");
 });
 
+app.get("/scores", function(req, res) {
+  db.score
+    .findAll({
+      order: [["score", "DESC"]]
+    })
+    .then(scores => {
+      res.render("scoreboard", { scores: scores });
+    });
+});
+
 app.post("/score", function(req, res) {
   console.log(req.body.score);
   console.log(req.body.name);
@@ -43,7 +53,7 @@ app.post("/score", function(req, res) {
           }
         );
       }
-      res.json();
+      res.redirect("/scores");
     });
 });
 

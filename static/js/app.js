@@ -695,22 +695,28 @@ const scoreboard = () => {
   scoreboardNameInput.setAttribute("placeholder", "Unique Name");
   scoreboardNameInput.classList.add("row");
 
+  const scoreboardScoreInput = document.createElement("input");
+  scoreboardScoreInput.setAttribute("type", "hidden");
+  scoreboardScoreInput.setAttribute("name", "score");
+  scoreboardScoreInput.setAttribute("value", concentration.calculateScore());
+
   const scoreboardSubmit = document.createElement("button");
   scoreboardSubmit.setAttribute("type", "submit");
   scoreboardSubmit.textContent = "Add Score to Scoreboard";
   scoreboardSubmit.classList.add("row");
 
-  console.log(scoreboardNameInput.getAttribute("value"));
-  scoreboardSubmit.addEventListener("click", e => {
-    e.preventDefault();
-    console.log(document.querySelector(".end").textContent);
-    postData("/score", {
-      score: concentration.calculateScore(),
-      name: scoreboardNameInput.value
-    });
-  });
+  // console.log(scoreboardNameInput.getAttribute("value"));
+  // scoreboardSubmit.addEventListener("click", e => {
+  //   e.preventDefault();
+  //   console.log(document.querySelector(".end").textContent);
+  //   postData("/score", {
+  //     score: concentration.calculateScore(),
+  //     name: scoreboardNameInput.value
+  //   });
+  // });
 
   scoreboardForm.appendChild(scoreboardNameInput);
+  scoreboardForm.appendChild(scoreboardScoreInput);
   scoreboardForm.appendChild(scoreboardSubmit);
 
   return scoreboardForm;
