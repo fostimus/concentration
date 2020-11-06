@@ -10,7 +10,7 @@ app.use(express.static("static"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 app.get("/", function(req, res) {
   res.render("index");
