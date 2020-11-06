@@ -687,15 +687,18 @@ const scoreboard = () => {
   const scoreboardForm = document.createElement("form");
   scoreboardForm.setAttribute("method", "post");
   scoreboardForm.setAttribute("action", "/score");
+  scoreboardForm.classList.add("container");
 
   const scoreboardNameInput = document.createElement("input");
   scoreboardNameInput.setAttribute("type", "text");
   scoreboardNameInput.setAttribute("name", "name");
   scoreboardNameInput.setAttribute("placeholder", "Unique Name");
+  scoreboardNameInput.classList.add("row");
 
   const scoreboardSubmit = document.createElement("button");
   scoreboardSubmit.setAttribute("type", "submit");
   scoreboardSubmit.textContent = "Add Score to Scoreboard";
+  scoreboardSubmit.classList.add("row");
 
   console.log(scoreboardNameInput.getAttribute("value"));
   scoreboardSubmit.addEventListener("click", e => {
