@@ -9,6 +9,8 @@ app.use(express.static("static"));
 // Sets up body-parser for parsing form data
 app.use(express.urlencoded({ extended: false }));
 
+const port = process.env.PORT || 3000;
+
 app.get("/", function(req, res) {
   res.render("index");
 });
@@ -41,4 +43,6 @@ app.post("/score", function(req, res) {
     });
 });
 
-app.listen(4000);
+console.log("On port.....", port);
+
+app.listen(port);

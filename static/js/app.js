@@ -212,7 +212,7 @@ nextRoundBtn.addEventListener("click", () => {
 
 const startBtn = document.querySelector(".start-btn");
 
-startBtn.addEventListener("click", () => {
+const newBoard = () => {
   // remove any modals from screen
   const modals = document.querySelectorAll(".modal");
   for (const modal of modals) {
@@ -227,6 +227,10 @@ startBtn.addEventListener("click", () => {
   concentration.gameStarted = true;
   startBtn.disabled = true;
   concentration.deal();
+};
+
+startBtn.addEventListener("click", () => {
+  newBoard();
 
   const timer = setInterval(() => {
     if (!pauseTimer) {
@@ -456,35 +460,36 @@ let concentration = {
       originalTimeLeft: 20,
       timeLeft: 20,
       completed: false
-    },
-    {
-      number: 2,
-      pairs: 6,
-      originalTimeLeft: 40,
-      timeLeft: 40,
-      completed: false
-    },
-    {
-      number: 3,
-      pairs: 9,
-      originalTimeLeft: 60,
-      timeLeft: 60,
-      completed: false
-    },
-    {
-      number: 4,
-      pairs: 12,
-      originalTimeLeft: 80,
-      timeLeft: 80,
-      completed: false
-    },
-    {
-      number: 5,
-      pairs: 15,
-      originalTimeLeft: 100,
-      timeLeft: 100,
-      completed: false
     }
+    // {
+    //   number: 2,
+    //   pairs: 6,
+    //   originalTimeLeft: 40,
+    //   timeLeft: 40,
+    //   completed: false
+    // },
+    // {
+    //   number: 3,
+    //   pairs: 9,
+    //   originalTimeLeft: 60,
+    //   timeLeft: 60,
+    //   completed: false
+    // },
+    // {
+    //   number: 4,
+    //   pairs: 12,
+    //   originalTimeLeft: 80,
+    //   timeLeft: 80,
+    //   completed: false
+    // },
+
+    // {
+    //   number: 5,
+    //   pairs: 15,
+    //   originalTimeLeft: 100,
+    //   timeLeft: 100,
+    //   completed: false
+    // }
   ],
 
   loadCards: function() {
