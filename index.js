@@ -8,6 +8,7 @@ app.use(express.static("static"));
 
 // Sets up body-parser for parsing form data
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 const port = process.env.PORT || 3000;
 
@@ -16,7 +17,9 @@ app.get("/", function(req, res) {
 });
 
 app.post("/score", function(req, res) {
-  res.redirect("/");
+  console.log(req.body.score);
+  console.log(req.body.name);
+
   // find the record with the name; if not, create it
   db.score
     .findOrCreate({
@@ -40,6 +43,7 @@ app.post("/score", function(req, res) {
           }
         );
       }
+      res.json();
     });
 });
 

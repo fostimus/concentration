@@ -1,435 +1,4 @@
 /*
- * DOM Manipulation
- */
-const appendToCardContainer = deck => {
-  const cardContainer = document.querySelector(".card-container");
-  const cardContainerChildren = cardContainer.children;
-
-  //remove all children
-  for (let i = cardContainerChildren.length - 1; i >= 0; i--) {
-    cardContainerChildren[i].remove();
-  }
-
-  /*
-   * 6 - 2 rows, 3 columns
-   * 12 - 4 rows, 3 columns
-   * 18 - 3 rows, 6 columns
-   * 24 - 4 rows, 6 columns
-   * 30 - 5 rows, 6 columns
-   */
-
-  let rows;
-  let cols;
-  let sixcol = null;
-  switch (deck.length) {
-    case 6:
-      rows = 2;
-      cols = 3;
-      break;
-    case 12:
-      rows = 4;
-      cols = 3;
-      break;
-    case 18:
-      rows = 3;
-      cols = 6;
-      sixcol = "sixcol";
-      break;
-    case 24:
-      rows = 4;
-      cols = 6;
-      sixcol = "sixcol";
-      break;
-    case 30:
-      rows = 5;
-      cols = 6;
-      sixcol = "sixcol";
-      break;
-  }
-
-  let index = 0;
-  for (let i = 0; i < rows; i++) {
-    const newContainer = document.createElement("div");
-    newContainer.classList.add("row");
-    for (let j = 0; j < cols; j++) {
-      newContainer.appendChild(deck[index]);
-      index++;
-    }
-    cardContainer.appendChild(newContainer);
-  }
-
-  if (sixcol !== null) {
-    document.querySelector(".main").classList.add(sixcol);
-  }
-
-  let root = document.documentElement;
-  root.style.setProperty("--main-flex", "flex");
-};
-
-const toggleImgSrc = card => {
-  card.classList.toggle("card-flip");
-  if (card.getAttribute("style").includes("card")) {
-    const style =
-      concentration.themes && concentration.themes.length > 0
-        ? concentration.themes[concentration.currentTheme].cardBack
-        : "./images/base-theme/back.png";
-
-    setStyle(card, style);
-  } else {
-    const cardSrc = interpolateFront(card.getAttribute("value"));
-
-    setStyle(card, cardSrc);
-  }
-};
-
-/**
- * helper functions
- */
-const checkCards = (card1, card2) => {
-  if (card1 !== null && card2 !== null) {
-    const val1 = card1.getAttribute("value");
-    const val2 = card2.getAttribute("value");
-
-    const uniqueIds = [];
-    uniqueIds.push(card1.getAttribute("unique-id"));
-    uniqueIds.push(card2.getAttribute("unique-id"));
-
-    if (
-      val1 === val2 &&
-      uniqueIds.length === 2 &&
-      uniqueIds.includes("1") &&
-      uniqueIds.includes("2")
-    ) {
-      return true;
-    }
-  }
-  return false;
-};
-
-const convertSeconds = seconds => {
-  if (seconds < 1) {
-    return seconds * 1000;
-  }
-  return seconds;
-};
-
-const createModal = (cssClass, text, children) => {
-  const newModal = document.createElement("div");
-
-  if (cssClass !== null) {
-    if (Array.isArray(cssClass)) {
-      for (const css of cssClass) {
-        newModal.classList.add(css);
-      }
-    } else {
-      newModal.classList.add(cssClass);
-    }
-  }
-
-  if (text !== null) {
-    newModal.textContent = text;
-  }
-
-  if (children !== null) {
-    if (Array.isArray(children)) {
-      for (const child of children) {
-        console.log(child);
-        newModal.appendChild(child);
-      }
-    } else {
-      newModal.appendChild(children);
-    }
-  }
-
-  return newModal;
-};
-
-const copyCard = (card, concentration) => {
-  const cardHolder = [];
-  //set unique ID per card in pair
-  card.setAttribute("unique-id", 1);
-  cardHolder.push(attachCardClickListeners(card, concentration));
-
-  // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
-  const cloneCard = card.cloneNode();
-  //set unique ID per card in pair
-  cloneCard.setAttribute("unique-id", 2);
-  cardHolder.push(attachCardClickListeners(cloneCard, concentration));
-
-  return cardHolder;
-};
-
-const interpolateFront = imgValue => {
-  let newSrc =
-    concentration.themes && concentration.themes.length > 0
-      ? concentration.themes[concentration.currentTheme].cardFront
-      : "./images/base-theme/cardx.png";
-
-  return newSrc.replace("x", imgValue);
-};
-
-const setStyle = (card, style) => {
-  card.setAttribute("style", 'background: no-repeat url("' + style + '");');
-};
-
-const initializeThemes = themesArray => {
-  if (themesArray) {
-    return themesArray;
-  }
-  return [];
-};
-
-/**
- * buttons and click listeners
- */
-const nextThemeBtn = document.querySelector(".next-theme");
-nextThemeBtn.addEventListener("click", () => {
-  concentration.toggleTheme(false);
-});
-
-const randomizeThemeBtn = document.querySelector(".randomize-theme");
-randomizeThemeBtn.addEventListener("click", () => {
-  concentration.toggleTheme(true);
-});
-
-let pauseTimer = false;
-
-//next round button only enabled when previous round completes, see start button click handler
-const nextRoundBtn = document.createElement("button");
-nextRoundBtn.textContent = "Next Round";
-nextRoundBtn.classList.add("next-round-btn");
-nextRoundBtn.disabled = true;
-
-nextRoundBtn.addEventListener("click", () => {
-  // un pause timer, deal new deck
-  pauseTimer = false;
-  concentration.deal();
-  nextRoundBtn.disabled = true;
-
-  // remove modal from screen
-  document.querySelector(".round-win-parent").remove();
-});
-
-const startBtn = document.querySelector(".start-btn");
-
-const newBoard = () => {
-  // remove any modals from screen
-  const modals = document.querySelectorAll(".modal");
-  for (const modal of modals) {
-    //remove parent, used for positioning
-    modal.parentElement.remove();
-  }
-
-  //start button only pressed once at the beginning of the game --> reset the game object
-  concentration.resetGame();
-
-  // deal new deck
-  concentration.gameStarted = true;
-  startBtn.disabled = true;
-  concentration.deal();
-};
-
-startBtn.addEventListener("click", () => {
-  newBoard();
-
-  const timer = setInterval(() => {
-    if (!pauseTimer) {
-      const timerDiv = document.querySelector(".timer");
-
-      // if a round expires, clear the timer, set the round to 1, and enable the start button
-      if (concentration.rounds[concentration.currentRound - 1].timeLeft === 0) {
-        timerDiv.textContent = "";
-        clearInterval(timer);
-
-        //shame gif
-        const shame = document.createElement("img");
-        shame.setAttribute("src", "./images/shame.gif");
-
-        //div to go back to round 1.
-        const round1 = document.createElement("div");
-        round1.textContent = "Back to Round 1.";
-
-        startBtn.disabled = false;
-        //round lost, go back to round 1
-        const loseModal = createModal(
-          "lose-parent",
-          null,
-          createModal(["lose", "modal"], "Time ran out 😞 Instead of fame...", [
-            shame,
-            round1,
-            startBtn
-          ])
-        );
-
-        document.querySelector(".game-play").appendChild(loseModal);
-      }
-      // if the round is completed, pause the timer, clear the completed deck, and enable the next round button
-      else if (concentration.rounds[concentration.currentRound - 1].completed) {
-        concentration.completeDeck = [];
-        // if completed, move on to next round
-        concentration.currentRound++;
-
-        // if current round is greater than the length of the round array, all rounds completed = game over (Win!).
-        if (concentration.currentRound > concentration.rounds.length) {
-          clearInterval(timer);
-        }
-        //otherwise, enable the next round button and unpause the timer
-        //and PAUSE until click
-        else {
-          nextRoundBtn.disabled = false;
-          pauseTimer = true;
-        }
-      } else {
-        concentration.rounds[concentration.currentRound - 1].timeLeft--;
-        timerDiv.innerHTML =
-          "<h2>" +
-          concentration.rounds[concentration.currentRound - 1].timeLeft +
-          " seconds left</h2> in round: <strong>" +
-          concentration.currentRound +
-          "</strong> of " +
-          concentration.rounds.length;
-      }
-    }
-  }, 1000);
-});
-
-/**
- * Card click listeners
- */
-const attachCardClickListeners = (card, concentration) => {
-  card.addEventListener("click", () => {
-    if (
-      concentration.gameStarted &&
-      concentration.selectedCards.length < 2 &&
-      !concentration.completeDeck.includes(card)
-    ) {
-      toggleImgSrc(card);
-      // only allow the second card chosen that is flipped up to use the timer
-      if (
-        !card.getAttribute("style").includes("back.png") &&
-        concentration.selectedCards.length === 1
-      ) {
-        let showCards =
-          concentration.turnSpeed >= 1 ? concentration.turnSpeed : 1;
-        const timerInterval = setInterval(
-          () => {
-            if (showCards === 0) {
-              clearInterval(timerInterval);
-              //only reset chosen if the card that TRIGGERED the timeout is not in the complete deck.
-              if (!concentration.completeDeck.includes(card)) {
-                concentration.resetChosen();
-              }
-            } else {
-              showCards--;
-            }
-          },
-          concentration.turnSpeed >= 1
-            ? 1000
-            : convertSeconds(concentration.turnSpeed)
-        );
-      }
-
-      // if the card is flipped up, add the card to selected cards
-      if (!card.getAttribute("style").includes("back.png")) {
-        concentration.selectedCards.push(card);
-      } // if the card selected is already in selected cards, clear all (turn over)
-      else if (concentration.selectedCards.includes(card)) {
-        concentration.resetChosen();
-      }
-    }
-  });
-
-  card.addEventListener("click", () => {
-    if (
-      concentration.selectedCards.length === 2 &&
-      checkCards(concentration.selectedCards[0], concentration.selectedCards[1])
-    ) {
-      const selectedCard1 = concentration.selectedCards[0];
-      const selectedCard2 = concentration.selectedCards[1];
-
-      //set up values to use to permanently keep card up
-      const card1Src = interpolateFront(selectedCard1.getAttribute("value"));
-      const card2Src = interpolateFront(selectedCard2.getAttribute("value"));
-
-      //permanently keep it face up
-      interpolateFront(selectedCard1, card1Src);
-      interpolateFront(selectedCard2, card2Src);
-
-      //add card to complete deck
-      if (!concentration.completeDeck.includes(selectedCard1)) {
-        concentration.completeDeck.push(selectedCard1);
-      }
-      if (!concentration.completeDeck.includes(selectedCard2)) {
-        concentration.completeDeck.push(selectedCard2);
-      }
-
-      concentration.clearSelected();
-
-      if (concentration.completeDeck.length === concentration.deck.length) {
-        // round is over, update round object boolean
-        concentration.rounds[concentration.currentRound - 1].completed = true;
-        // if the current round is the same as the length as the round array, the game is over
-        if (concentration.currentRound === concentration.rounds.length) {
-          const scoreboardForm = document.createElement("form");
-          scoreboardForm.setAttribute("method", "post");
-          scoreboardForm.setAttribute("action", "/score");
-
-          const scoreboardNameInput = document.createElement("input");
-          scoreboardNameInput.setAttribute("type", "text");
-          scoreboardNameInput.setAttribute("name", "name");
-          scoreboardNameInput.setAttribute("placeholder", "Unique Name");
-
-          const scoreboardScoreInput = document.createElement("input");
-          scoreboardScoreInput.setAttribute("type", "hidden");
-          scoreboardScoreInput.setAttribute("name", "score");
-          scoreboardScoreInput.setAttribute(
-            "value",
-            concentration.calculateScore()
-          );
-
-          const scoreboardSubmit = document.createElement("button");
-          scoreboardSubmit.setAttribute("type", "submit");
-          scoreboardSubmit.textContent = "Add Score to Scoreboard";
-
-          scoreboardForm.appendChild(scoreboardNameInput);
-          scoreboardForm.appendChild(scoreboardScoreInput);
-          scoreboardForm.appendChild(scoreboardSubmit);
-
-          startBtn.disabled = false;
-          //append end modal
-          const endModal = createModal(
-            "end-parent",
-            null,
-            createModal(["end", "modal"], "YOU BEAT THE GAME! Play again?", [
-              startBtn,
-              scoreboardForm
-            ])
-          );
-
-          document.querySelector(".main").appendChild(endModal);
-        }
-        // otherwise, the end of the round is over
-        else {
-          const roundWinModal = createModal(
-            "round-win-parent",
-            null,
-            createModal(
-              ["round-win", "modal"],
-              "You won round " + concentration.currentRound + "!",
-              nextRoundBtn
-            )
-          );
-
-          //insert next round modal
-          document.querySelector(".game-play").appendChild(roundWinModal);
-        }
-      }
-    }
-  });
-  return card;
-};
-
-/*
  * Game Object
  */
 let concentration = {
@@ -443,6 +12,8 @@ let concentration = {
   deck: [],
 
   completeDeck: [],
+
+  pauseTimer: false,
 
   gameStarted: false,
 
@@ -491,6 +62,15 @@ let concentration = {
     //   completed: false
     // }
   ],
+
+  /**
+   * DOM elements
+   */
+  startBtn: document.querySelector(".start-btn"),
+
+  nextThemeBtn: document.querySelector(".next-theme"),
+
+  randomizeThemeBtn: document.querySelector(".randomize-theme"),
 
   loadCards: function() {
     // load card imgs into initial deck
@@ -697,11 +277,438 @@ let concentration = {
   }
 };
 
+/*
+ * DOM Manipulation
+ */
+const appendToCardContainer = deck => {
+  const cardContainer = document.querySelector(".card-container");
+  const cardContainerChildren = cardContainer.children;
+
+  //remove all children
+  for (let i = cardContainerChildren.length - 1; i >= 0; i--) {
+    cardContainerChildren[i].remove();
+  }
+
+  /*
+   * 6 - 2 rows, 3 columns
+   * 12 - 4 rows, 3 columns
+   * 18 - 3 rows, 6 columns
+   * 24 - 4 rows, 6 columns
+   * 30 - 5 rows, 6 columns
+   */
+
+  let rows;
+  let cols;
+  let sixcol = null;
+  switch (deck.length) {
+    case 6:
+      rows = 2;
+      cols = 3;
+      break;
+    case 12:
+      rows = 4;
+      cols = 3;
+      break;
+    case 18:
+      rows = 3;
+      cols = 6;
+      sixcol = "sixcol";
+      break;
+    case 24:
+      rows = 4;
+      cols = 6;
+      sixcol = "sixcol";
+      break;
+    case 30:
+      rows = 5;
+      cols = 6;
+      sixcol = "sixcol";
+      break;
+  }
+
+  let index = 0;
+  for (let i = 0; i < rows; i++) {
+    const newContainer = document.createElement("div");
+    newContainer.classList.add("row");
+    for (let j = 0; j < cols; j++) {
+      newContainer.appendChild(deck[index]);
+      index++;
+    }
+    cardContainer.appendChild(newContainer);
+  }
+
+  if (sixcol !== null) {
+    document.querySelector(".main").classList.add(sixcol);
+  }
+
+  let root = document.documentElement;
+  root.style.setProperty("--main-flex", "flex");
+};
+
+const toggleImgSrc = card => {
+  card.classList.toggle("card-flip");
+  if (card.getAttribute("style").includes("card")) {
+    const style =
+      concentration.themes && concentration.themes.length > 0
+        ? concentration.themes[concentration.currentTheme].cardBack
+        : "./images/base-theme/back.png";
+
+    setStyle(card, style);
+  } else {
+    const cardSrc = interpolateFront(card.getAttribute("value"));
+
+    setStyle(card, cardSrc);
+  }
+};
+
+/**
+ * helper functions
+ */
+const checkCards = (card1, card2) => {
+  if (card1 !== null && card2 !== null) {
+    const val1 = card1.getAttribute("value");
+    const val2 = card2.getAttribute("value");
+
+    const uniqueIds = [];
+    uniqueIds.push(card1.getAttribute("unique-id"));
+    uniqueIds.push(card2.getAttribute("unique-id"));
+
+    if (val1 === val2 && uniqueIds.includes("1") && uniqueIds.includes("2")) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const convertSeconds = seconds => {
+  if (seconds < 1) {
+    return seconds * 1000;
+  }
+  return seconds;
+};
+
+const createModal = (cssClass, text, children) => {
+  const newModal = document.createElement("div");
+
+  if (cssClass !== null) {
+    if (Array.isArray(cssClass)) {
+      for (const css of cssClass) {
+        newModal.classList.add(css);
+      }
+    } else {
+      newModal.classList.add(cssClass);
+    }
+  }
+
+  if (text !== null) {
+    newModal.textContent = text;
+  }
+
+  if (children !== null) {
+    if (Array.isArray(children)) {
+      for (const child of children) {
+        console.log(child);
+        newModal.appendChild(child);
+      }
+    } else {
+      newModal.appendChild(children);
+    }
+  }
+
+  return newModal;
+};
+
+const copyCard = (card, concentration) => {
+  const cardHolder = [];
+  //set unique ID per card in pair
+  card.setAttribute("unique-id", 1);
+  cardHolder.push(attachCardClickListeners(card, concentration));
+
+  // push card twice, to ensure a pair is in deck. use cloneNode() to generate a copy of the image
+  const cloneCard = card.cloneNode();
+  //set unique ID per card in pair
+  cloneCard.setAttribute("unique-id", 2);
+  cardHolder.push(attachCardClickListeners(cloneCard, concentration));
+
+  return cardHolder;
+};
+
+const interpolateFront = imgValue => {
+  let newSrc =
+    concentration.themes && concentration.themes.length > 0
+      ? concentration.themes[concentration.currentTheme].cardFront
+      : "./images/base-theme/cardx.png";
+
+  return newSrc.replace("x", imgValue);
+};
+
+const setStyle = (card, style) => {
+  card.setAttribute("style", 'background: no-repeat url("' + style + '");');
+};
+
+const initializeThemes = themesArray => {
+  if (themesArray) {
+    return themesArray;
+  }
+  return [];
+};
+
+/**
+ * buttons and click listeners
+ */
+concentration.nextThemeBtn.addEventListener("click", () => {
+  concentration.toggleTheme(false);
+});
+
+concentration.randomizeThemeBtn.addEventListener("click", () => {
+  concentration.toggleTheme(true);
+});
+
+//next round button only enabled when previous round completes, see start button click handler
+const nextRoundBtn = document.createElement("button");
+nextRoundBtn.textContent = "Next Round";
+nextRoundBtn.classList.add("next-round-btn");
+nextRoundBtn.disabled = true;
+
+nextRoundBtn.addEventListener("click", () => {
+  // un pause timer, deal new deck
+  concentration.pauseTimer = false;
+  concentration.deal();
+  nextRoundBtn.disabled = true;
+
+  // remove modal from screen
+  document.querySelector(".round-win-parent").remove();
+});
+
+const newBoard = () => {
+  // remove any modals from screen
+  const modals = document.querySelectorAll(".modal");
+  for (const modal of modals) {
+    //remove parent, used for positioning
+    modal.parentElement.remove();
+  }
+
+  //start button only pressed once at the beginning of the game --> reset the game object
+  concentration.resetGame();
+
+  // deal new deck
+  concentration.gameStarted = true;
+  concentration.startBtn.disabled = true;
+  concentration.deal();
+};
+
+concentration.startBtn.addEventListener("click", () => {
+  newBoard();
+
+  const timer = setInterval(() => {
+    if (!concentration.pauseTimer) {
+      const timerDiv = document.querySelector(".timer");
+
+      // if a round expires, clear the timer, set the round to 1, and enable the start button
+      if (concentration.rounds[concentration.currentRound - 1].timeLeft === 0) {
+        timerDiv.textContent = "";
+        clearInterval(timer);
+
+        //shame gif
+        const shame = document.createElement("img");
+        shame.setAttribute("src", "./images/shame.gif");
+
+        //div to go back to round 1.
+        const round1 = document.createElement("div");
+        round1.textContent = "Back to Round 1.";
+
+        concentration.startBtn.disabled = false;
+        //round lost, go back to round 1
+        const loseModal = createModal(
+          "lose-parent",
+          null,
+          createModal(["lose", "modal"], "Time ran out 😞 Instead of fame...", [
+            shame,
+            round1,
+            concentration.startBtn
+          ])
+        );
+
+        document.querySelector(".game-play").appendChild(loseModal);
+      }
+      // if the round is completed, pause the timer, clear the completed deck, and enable the next round button
+      else if (concentration.rounds[concentration.currentRound - 1].completed) {
+        concentration.completeDeck = [];
+        // if completed, move on to next round
+        concentration.currentRound++;
+
+        // if current round is greater than the length of the round array, all rounds completed = game over (Win!).
+        if (concentration.currentRound > concentration.rounds.length) {
+          clearInterval(timer);
+        }
+        //otherwise, enable the next round button and unpause the timer
+        //and PAUSE until click
+        else {
+          nextRoundBtn.disabled = false;
+          concentraion.pauseTimer = true;
+        }
+      } else {
+        concentration.rounds[concentration.currentRound - 1].timeLeft--;
+        timerDiv.innerHTML =
+          "<h2>" +
+          concentration.rounds[concentration.currentRound - 1].timeLeft +
+          " seconds left</h2> in round: <strong>" +
+          concentration.currentRound +
+          "</strong> of " +
+          concentration.rounds.length;
+      }
+    }
+  }, 1000);
+});
+
+/**
+ * Card click listeners
+ */
+const attachCardClickListeners = (card, concentration) => {
+  card.addEventListener("click", () => {
+    if (
+      concentration.gameStarted &&
+      concentration.selectedCards.length < 2 &&
+      !concentration.completeDeck.includes(card)
+    ) {
+      toggleImgSrc(card);
+      // only allow the second card chosen that is flipped up to use the timer
+      if (
+        !card.getAttribute("style").includes("back.png") &&
+        concentration.selectedCards.length === 1
+      ) {
+        let showCards =
+          concentration.turnSpeed >= 1 ? concentration.turnSpeed : 1;
+        const timerInterval = setInterval(
+          () => {
+            if (showCards === 0) {
+              clearInterval(timerInterval);
+              //only reset chosen if the card that TRIGGERED the timeout is not in the complete deck.
+              if (!concentration.completeDeck.includes(card)) {
+                concentration.resetChosen();
+              }
+            } else {
+              showCards--;
+            }
+          },
+          concentration.turnSpeed >= 1
+            ? 1000
+            : convertSeconds(concentration.turnSpeed)
+        );
+      }
+
+      // if the card is flipped up, add the card to selected cards
+      if (!card.getAttribute("style").includes("back.png")) {
+        concentration.selectedCards.push(card);
+      } // if the card selected is already in selected cards, clear all (turn over)
+      else if (concentration.selectedCards.includes(card)) {
+        concentration.resetChosen();
+      }
+    }
+  });
+
+  card.addEventListener("click", () => {
+    if (
+      concentration.selectedCards.length === 2 &&
+      checkCards(concentration.selectedCards[0], concentration.selectedCards[1])
+    ) {
+      const selectedCard1 = concentration.selectedCards[0];
+      const selectedCard2 = concentration.selectedCards[1];
+
+      //set up values to use to permanently keep card up
+      const card1Src = interpolateFront(selectedCard1.getAttribute("value"));
+      const card2Src = interpolateFront(selectedCard2.getAttribute("value"));
+
+      //permanently keep it face up
+      interpolateFront(selectedCard1, card1Src);
+      interpolateFront(selectedCard2, card2Src);
+
+      //add card to complete deck
+      if (!concentration.completeDeck.includes(selectedCard1)) {
+        concentration.completeDeck.push(selectedCard1);
+      }
+      if (!concentration.completeDeck.includes(selectedCard2)) {
+        concentration.completeDeck.push(selectedCard2);
+      }
+
+      concentration.clearSelected();
+
+      if (concentration.completeDeck.length === concentration.deck.length) {
+        // round is over, update round object boolean
+        concentration.rounds[concentration.currentRound - 1].completed = true;
+        // if the current round is the same as the length as the round array, the game is over
+        if (concentration.currentRound === concentration.rounds.length) {
+          const scoreboardForm = scoreboard();
+
+          concentration.startBtn.disabled = false;
+          //append end modal
+          const endModal = createModal(
+            "end-parent",
+            null,
+            createModal(["end", "modal"], "YOU BEAT THE GAME! Play again?", [
+              concentration.startBtn,
+              scoreboardForm
+            ])
+          );
+
+          document.querySelector(".main").appendChild(endModal);
+        }
+        // otherwise, the end of the round is over
+        else {
+          const roundWinModal = createModal(
+            "round-win-parent",
+            null,
+            createModal(
+              ["round-win", "modal"],
+              "You won round " + concentration.currentRound + "!",
+              nextRoundBtn
+            )
+          );
+
+          //insert next round modal
+          document.querySelector(".game-play").appendChild(roundWinModal);
+        }
+      }
+    }
+  });
+  return card;
+};
+
 if (!concentration.themes) {
-  nextThemeBtn.disabled = true;
-  randomizeThemeBtn.disabled = true;
+  concentration.nextThemeBtn.disabled = true;
+  concentration.randomizeThemeBtn.disabled = true;
 }
 if (concentration.themes <= 0) {
-  nextThemeBtn.disabled = true;
-  randomizeThemeBtn.disabled = true;
+  concentration.nextThemeBtn.disabled = true;
+  concentration.randomizeThemeBtn.disabled = true;
 }
+
+const scoreboard = () => {
+  const scoreboardForm = document.createElement("form");
+  scoreboardForm.setAttribute("method", "post");
+  scoreboardForm.setAttribute("action", "/score");
+
+  const scoreboardNameInput = document.createElement("input");
+  scoreboardNameInput.setAttribute("type", "text");
+  scoreboardNameInput.setAttribute("name", "name");
+  scoreboardNameInput.setAttribute("placeholder", "Unique Name");
+
+  const scoreboardSubmit = document.createElement("button");
+  scoreboardSubmit.setAttribute("type", "submit");
+  scoreboardSubmit.textContent = "Add Score to Scoreboard";
+
+  console.log(scoreboardNameInput.getAttribute("value"));
+  scoreboardSubmit.addEventListener("click", e => {
+    e.preventDefault();
+    console.log(document.querySelector(".end").textContent);
+    postData("/score", {
+      score: concentration.calculateScore(),
+      name: scoreboardNameInput.value
+    });
+  });
+
+  scoreboardForm.appendChild(scoreboardNameInput);
+  scoreboardForm.appendChild(scoreboardSubmit);
+
+  return scoreboardForm;
+};
