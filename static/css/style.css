@@ -189,24 +189,20 @@ button:disabled {
 }
 
 .buttons,
-.theme-btns {
+.btns {
   gap: 15px;
 }
 
-.theme-btns {
+.btns {
   display: flex;
   justify-content: center;
+  margin: 0;
+  font-size: 14px;
 }
 
 .start-btn {
   width: 150px;
   height: 25px;
-}
-
-.next-theme,
-.randomize-theme {
-  margin: 0;
-  font-size: 14px;
 }
 
 .timer {
@@ -235,7 +231,7 @@ button:disabled {
 }
 
 @media (min-width: 900px) {
-  .theme-btns {
+  .btns {
     position: absolute;
     top: 0;
     right: 0;

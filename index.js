@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const { Sequelize } = require("sequelize");
 const db = require("./models");
 
 app.set("view engine", "ejs");
@@ -13,6 +14,7 @@ app.use(express.json());
 const port = process.env.PORT || 4000;
 
 app.get("/", function(req, res) {
+  testConnection();
   res.render("index");
 });
 
