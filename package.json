@@ -4,7 +4,8 @@
   "description": "The classic memory game of \"Concentration\". This solitary game is played by clicking cards that are face down, and trying to find its matching pair; if you successfully match a card, they will stay face up.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
