@@ -456,13 +456,17 @@ const initializeThemes = themesArray => {
 /**
  * buttons and click listeners
  */
-concentration.nextThemeBtn.addEventListener("click", () => {
-  concentration.toggleTheme(false);
-});
+if (concentration.nextThemeBtn) {
+  concentration.nextThemeBtn.addEventListener("click", () => {
+    concentration.toggleTheme(false);
+  });
+}
 
-concentration.randomizeThemeBtn.addEventListener("click", () => {
-  concentration.toggleTheme(true);
-});
+if (concentration.randomizeThemeBtn) {
+  concentration.randomizeThemeBtn.addEventListener("click", () => {
+    concentration.toggleTheme(true);
+  });
+}
 
 //next round button only enabled when previous round completes, see start button click handler
 const nextRoundBtn = document.createElement("button");
@@ -673,15 +677,6 @@ const attachCardClickListeners = (card, concentration) => {
   });
   return card;
 };
-
-if (!concentration.themes) {
-  concentration.nextThemeBtn.disabled = true;
-  concentration.randomizeThemeBtn.disabled = true;
-}
-if (concentration.themes <= 0) {
-  concentration.nextThemeBtn.disabled = true;
-  concentration.randomizeThemeBtn.disabled = true;
-}
 
 const scoreboard = () => {
   const scoreboardForm = document.createElement("form");
