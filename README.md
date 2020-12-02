@@ -1,5 +1,7 @@
 # Concentration
 
+TL;DR : Play the game here: <https://fostimus-concentration.herokuapp.com/>
+
 The classic memory game of "Concentration". This solitary game is played by clicking cards that are face down, and trying to find its matching pair; if you successfully match a card, they will stay face up.
 
 Once you match ALL cards and the board is face up, you win the round. If the timer expires before you finish **any** round, you will be sent back to round 1.
@@ -12,16 +14,16 @@ Personally, I wanted to focus on CSS and using Flexbox to lay out the game board
 
 ## Screenshots
 
-![Landing Page](./images/screenshots/ss1.png "Screenshot 1")
-![Lakers cards](./images/screenshots/ss2.png "Screenshot 2")
-![Numbers cards + theme](./images/screenshots/ss3.png "Screenshot 3")
-![Win modal](./images/screenshots/ss4.png "Screenshot 4")
+![Landing Page](./static/images/screenshots/ss1.png "Screenshot 1")
+![Lakers cards](./static/images/screenshots/ss2.png "Screenshot 2")
+![Numbers cards + theme](./static/images/screenshots/ss3.png "Screenshot 3")
+![Win modal](./static/images/screenshots/ss4.png "Screenshot 4")
 
 ## User Stories & Wireframes
 
-![Wireframe 1](./images/wireframes/wireframe-1.png)
-![Wireframe 2](./images/wireframes/wireframe-2.png)
-![Wireframe 3](./images/wireframes/wireframe-3.png)
+![Wireframe 1](./static/images/wireframes/wireframe-1.png)
+![Wireframe 2](./static/images/wireframes/wireframe-2.png)
+![Wireframe 3](./static/images/wireframes/wireframe-3.png)
 
 ## Technologies & Code Snippets
 
